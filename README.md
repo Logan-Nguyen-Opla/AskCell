@@ -1,13 +1,103 @@
-# 🧬 AskCell — MVP v1.0
+# 🧬 AskCell
 
-An interactive **Single-Cell RNA-seq (scRNA-seq)** analytics platform. Visualize
-massive biomedical datasets in real time with hardware-accelerated WebGL
-(Deck.gl), and query biological insights in natural language via a **Gemini**
-agent with function calling.
+Two analysis surfaces over one backend, switchable from the button at the bottom
+of the screen:
 
-> **Comes with built-in mock data.** The backend auto-loads a bundled sample
-> dataset on startup, so the cell scatterplot appears the moment you open the
-> app — no data hunting, no upload needed to see it work.
+1. **Cytometry** *(default)* — finds abnormal cell populations in a flow or mass
+   cytometry specimen by comparing it against a reference built from healthy
+   specimens. This is the workflow the project is built around.
+2. **scRNA-seq** — the original single-cell gene-expression browser: a WebGL
+   scatterplot with gene colouring, gating, dot plots and a Claude chat agent.
+
+> **Comes with built-in data on both sides.** The backend fits a healthy
+> cytometry reference and loads a sample scRNA-seq dataset on startup, so both
+> screens work the moment you open the app.
+
+---
+
+## 🩸 Cytometry: detecting abnormal populations
+
+### What it does
+
+Your cytometer measures ~14 surface proteins on a few hundred thousand cells and
+writes one `.fcs` file — effectively a spreadsheet, one row per cell. AskCell
+compares those cells against healthy marrow and reports any population that does
+not belong.
+
+```
+.fcs file
+  -> QC gating          drop debris, doublets, dead cells
+  -> compensation       undo dye bleed between detectors
+  -> arcsinh transform  compress ~5 decades onto a usable scale
+  -> stage 1: flag      cells far from every healthy cell
+  -> stage 2: cluster   keep only the flagged cells grouped together
+  -> report             percentage + phenotype + picture
+```
+
+### Why two stages
+
+The threshold is *measured*, not guessed: each healthy specimen is scored against
+a reference built from the others, and the cutoff is the 99.9th percentile of the
+resulting distribution. That makes the false-flag rate a chosen quantity — about
+one healthy cell in a thousand.
+
+Which means **stage 1 alone is not a detector.** On a 400,000-event file it flags
+several hundred cells in a *perfectly healthy* person, and the rate cannot be
+tuned away: pushing the threshold high enough to silence it also pushes it past
+the small populations that matter most.
+
+Stage 2 is the real test. Cancer is one cell that stopped maturing and started
+copying itself, so its descendants land in a tight knot in marker space. Spurious
+flags come from unrelated cells and land scattered. Same score, different shape.
+
+This is also what separates a clone from **hematogones** — normal B-cell
+precursors that are CD19+CD10+ with dim CD45, near enough the blast phenotype to
+fool a single-marker rule. They are odd too, but spread smoothly along a
+maturation path instead of knotted at one point.
+
+### Try it
+
+```bash
+cd backend
+python make_mock_fcs.py        # generate the fixtures (~52 MB, seeded)
+python run_detection.py        # run the whole pipeline, print reports
+```
+
+Measured on those fixtures:
+
+| Specimen | True abnormal | Reported | Sensitivity | Precision |
+| -------- | ------------- | -------- | ----------- | --------- |
+| `patient_overt`  | 14,258 (25%)   | 25.51%  | 100.00% | 100.00% |
+| `patient_mrd`    | 191 (0.05%)    | 0.051%  | 98.95%  | 100.00% |
+| `patient_normal` | 0              | 0%      | —       | correctly negative |
+
+400,000 events in ~5 s. The healthy control contains hematogones on purpose —
+not flagging it is the harder half of the problem.
+
+### Using your own data
+
+Drop files onto the centre pane, or use the left rail:
+
+- **one file** → analysed as a patient specimen
+- **several files** → used to build a new healthy reference (minimum 2)
+
+The reference needs at least two specimens because the threshold is calibrated by
+holding one out. Marker intensities are not comparable across antibody panels, so
+a specimen is refused outright if it lacks any marker the reference was built on.
+
+> ⚠️ **Research and educational use only.** Not a diagnostic device, and not
+> clinically validated. One parameter (the cluster-linking radius) is calibrated
+> against synthetic data and must be re-measured on real specimens; the guard
+> test is `tests/test_flow_detect.py::test_radius_sits_in_the_measured_gap`.
+
+---
+
+## 🔬 scRNA-seq browser
+
+An interactive **Single-Cell RNA-seq** analytics platform. Visualize massive
+biomedical datasets in real time with hardware-accelerated WebGL (Deck.gl), and
+query biological insights in natural language via a **Claude** agent with tool
+use.
 
 ---
 
@@ -134,6 +224,23 @@ The app also warns you before a large upload and shows a live progress bar + ETA
 ---
 
 ## API reference
+
+### Cytometry
+
+| Method | Endpoint                      | Body                          | Returns                                        |
+| ------ | ----------------------------- | ----------------------------- | ---------------------------------------------- |
+| GET    | `/api/flow/status`            | —                             | `{ reference_loaded, sample_loaded, ... }`     |
+| POST   | `/api/flow/reference`         | `multipart` 2+ `.fcs` files   | `{ message, reference }`                       |
+| POST   | `/api/flow/sample`            | `multipart` one `.fcs` file   | full detection report                          |
+| GET    | `/api/flow/report`            | —                             | the report for the loaded specimen             |
+| GET    | `/api/flow/scatter`           | —                             | `{ reference, cells: [{id,x,y,s,p}] }`         |
+| GET    | `/api/flow/population/{n}`    | —                             | `{ label, n, ids }`                            |
+
+In `/api/flow/scatter`, `s` is the cell's distance from normal and `p` is the
+population it belongs to (`-1` for none). Abnormal cells are never thinned by the
+display subsample — a 189-cell population would otherwise vanish.
+
+### scRNA-seq
 
 | Method | Endpoint       | Body                       | Returns                                   |
 | ------ | -------------- | -------------------------- | ----------------------------------------- |

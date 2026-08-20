@@ -21,3 +21,15 @@ dist/
 # Datasets — ignore uploads, but KEEP the bundled sample
 *.h5ad
 !backend/sample_data/mock_pbmc.h5ad
+
+# Cytometry fixtures — ~52 MB, and make_mock_fcs.py regenerates them
+# deterministically (seed 42), so they are built rather than committed:
+#   cd backend && python make_mock_fcs.py
+*.fcs
+*.labels.npy
+
+# Test/tooling caches
+.pytest_cache/
+
+# Fitted reference cache (rebuilt by run_detection.py --refit)
+reference.npz
