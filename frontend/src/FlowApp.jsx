@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import FlowViewer from "./components/FlowViewer.jsx";
 import FlowReport from "./components/FlowReport.jsx";
+import FlowChat from "./components/FlowChat.jsx";
 import { API_BASE } from "./lib/api.js";
 
 /**
@@ -20,6 +21,8 @@ export default function FlowApp() {
   const [reference, setReference] = useState(null);
   const [scatter, setScatter] = useState(null);
   const [report, setReport] = useState(null);
+  const [interpretation, setInterpretation] = useState(null);
+  const [rightTab, setRightTab] = useState("report");
   const [sampleName, setSampleName] = useState(null);
 
   const [busy, setBusy] = useState(null);      // "sample" | "reference" | null
@@ -27,6 +30,7 @@ export default function FlowApp() {
   const [error, setError] = useState(null);
   const [dragging, setDragging] = useState(false);
 
+  const [focusPopulation, setFocusPopulation] = useState(null);
   const [showReference, setShowReference] = useState(true);
   const [colorMode, setColorMode] = useState("population");
   const [pointSize, setPointSize] = useState(3);
@@ -35,6 +39,15 @@ export default function FlowApp() {
   const refInput = useRef(null);
 
   // ---- initial state: pick up the server-side reference ----
+  const refreshInterpretation = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/flow/interpret`);
+      setInterpretation(res.ok ? await res.json() : null);
+    } catch {
+      setInterpretation(null);
+    }
+  }, []);
+
   const refreshScatter = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/api/flow/scatter`);
@@ -59,6 +72,7 @@ export default function FlowApp() {
           if (!cancelled) {
             setReport(rep);
             setSampleName(s.sample?.filename || null);
+            await refreshInterpretation();
           }
         }
       } catch {
@@ -66,7 +80,7 @@ export default function FlowApp() {
       }
     })();
     return () => { cancelled = true; };
-  }, [refreshScatter]);
+  }, [refreshScatter, refreshInterpretation]);
 
   // ---- upload helper (XHR so we get real progress on large files) ----
   const upload = useCallback(
@@ -116,18 +130,20 @@ export default function FlowApp() {
         return;
       }
       setReport(null);
+      setInterpretation(null);
+      setFocusPopulation(null);
       const form = new FormData();
       form.append("file", file);
       try {
         const rep = await upload(`${API_BASE}/api/flow/sample`, form, "sample");
         setReport(rep);
         setSampleName(file.name);
-        await refreshScatter();
+        await Promise.all([refreshScatter(), refreshInterpretation()]);
       } catch (e) {
         setError(e.message);
       }
     },
-    [upload, refreshScatter]
+    [upload, refreshScatter, refreshInterpretation]
   );
 
   const handleReference = useCallback(
@@ -147,7 +163,9 @@ export default function FlowApp() {
         setReference(res.reference);
         // The old result was measured against the old reference: drop it.
         setReport(null);
+        setInterpretation(null);
         setSampleName(null);
+        setFocusPopulation(null);
         await refreshScatter();
       } catch (e) {
         setError(e.message);
@@ -319,6 +337,8 @@ export default function FlowApp() {
             pointSize={pointSize}
             showReference={showReference}
             colorMode={colorMode}
+            focusPopulation={focusPopulation}
+            onClearFocus={() => setFocusPopulation(null)}
           />
         ) : (
           <Empty busy={busy} progress={progress} />
@@ -368,7 +388,40 @@ export default function FlowApp() {
       {/* ================= right: the result ================= */}
       <aside className="flex h-full w-96 shrink-0 flex-col overflow-hidden border-l border-slate-800">
         {report ? (
-          <FlowReport report={report} />
+          <>
+            <div className="flex shrink-0 border-b border-slate-800">
+              {[
+                ["report", "Result"],
+                ["ask", "Ask AskCell"],
+              ].map(([id, label]) => (
+                <button
+                  key={id}
+                  onClick={() => setRightTab(id)}
+                  className={`flex-1 px-3 py-2.5 text-xs font-medium transition ${
+                    rightTab === id
+                      ? "border-b-2 border-indigo-400 text-indigo-200"
+                      : "text-slate-500 hover:text-slate-300"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div className="flex min-h-0 flex-1 flex-col">
+              {rightTab === "report" ? (
+                <FlowReport
+                  report={report}
+                  interpretation={interpretation}
+                  focusPopulation={focusPopulation}
+                  onHighlightPopulation={(label) =>
+                    setFocusPopulation((cur) => (cur === label ? null : label))
+                  }
+                />
+              ) : (
+                <FlowChat hasSample={!!report} sampleName={sampleName} />
+              )}
+            </div>
+          </>
         ) : (
           <div className="flex h-full flex-col items-center justify-center px-6 text-center">
             <div className="mb-3 grid grid-cols-5 gap-1 opacity-25">

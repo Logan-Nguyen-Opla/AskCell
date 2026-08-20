@@ -28,6 +28,8 @@ import { ScatterplotLayer } from "@deck.gl/layers";
  *   pointSize: number
  *   showReference: boolean
  *   colorMode: "population" | "score"
+ *   focusPopulation: number | null   // zoom to one population, dim the rest
+ *   onClearFocus: () => void
  */
 
 const REF_RGB = [71, 85, 105];        // slate-600, the healthy backdrop
@@ -99,6 +101,8 @@ export default function FlowViewer({
   pointSize = 3,
   showReference = true,
   colorMode = "population",
+  focusPopulation = null,
+  onClearFocus,
 }) {
   const containerRef = useRef(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -107,6 +111,20 @@ export default function FlowViewer({
 
   const refPoints = reference?.points || [];
   const bounds = useMemo(() => boundsOf(refPoints, cells), [refPoints, cells]);
+
+  const focused = focusPopulation != null;
+  const focusBounds = useMemo(() => {
+    if (!focused) return null;
+    const members = cells.filter((c) => c.p === focusPopulation);
+    if (!members.length) return null;
+    const b = boundsOf([], members);
+    if (!b) return null;
+    // Pad outward so the population is framed with context around it rather
+    // than filling the viewport edge to edge.
+    const padX = Math.max((b[2] - b[0]) * 1.4, 0.5);
+    const padY = Math.max((b[3] - b[1]) * 1.4, 0.5);
+    return [b[0] - padX, b[1] - padY, b[2] + padX, b[3] + padY];
+  }, [focused, focusPopulation, cells]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -125,11 +143,19 @@ export default function FlowViewer({
     }
   }, [bounds, size.width, size.height]);
 
+  // Zoom to a population when one is picked from the report.
+  useEffect(() => {
+    if (focusBounds && size.width && size.height) {
+      setViewState(fitViewState(focusBounds, size.width, size.height));
+    }
+  }, [focusBounds, size.width, size.height]);
+
   const resetView = useCallback(() => {
+    onClearFocus?.();
     if (bounds && size.width && size.height) {
       setViewState(fitViewState(bounds, size.width, size.height));
     }
-  }, [bounds, size.width, size.height]);
+  }, [bounds, size.width, size.height, onClearFocus]);
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) containerRef.current?.requestFullscreen();
@@ -149,10 +175,13 @@ export default function FlowViewer({
 
   const getFillColor = useCallback(
     (d) => {
+      // When one population is focused, everything else fades to a backdrop so
+      // the population under examination is unambiguous.
+      if (focused && d.p !== focusPopulation) return [51, 65, 85];
       if (colorMode === "score") return rampRgb(d.s / (scoreMax || 1));
       return d.p >= 0 ? ABNORMAL_RGB : NORMAL_RGB;
     },
-    [colorMode, scoreMax]
+    [colorMode, scoreMax, focused, focusPopulation]
   );
 
   // Abnormal cells are drawn larger so a 189-cell population stays visible
@@ -204,7 +233,7 @@ export default function FlowViewer({
           highlightColor: [255, 255, 255, 255],
           opacity: 0.85,
           updateTriggers: {
-            getFillColor: [colorMode, scoreMax],
+            getFillColor: [colorMode, scoreMax, focused, focusPopulation],
             getRadius: pointSize,
           },
         })
@@ -213,7 +242,7 @@ export default function FlowViewer({
     return out;
   }, [
     refPoints, cells, showReference, pointSize, getFillColor, getRadius,
-    colorMode, scoreMax,
+    colorMode, scoreMax, focused, focusPopulation,
   ]);
 
   return (
@@ -246,6 +275,21 @@ export default function FlowViewer({
             }
           }
         />
+      )}
+
+      {/* Focus banner -- a zoomed view must never look like the full picture */}
+      {focused && (
+        <div className="absolute left-1/2 top-4 z-10 flex -translate-x-1/2 items-center gap-3 rounded-full border border-rose-500/50 bg-slate-900/90 px-4 py-1.5 backdrop-blur">
+          <span className="font-mono text-[11px] text-rose-300">
+            showing population {focusPopulation + 1} only
+          </span>
+          <button
+            onClick={onClearFocus}
+            className="font-mono text-[10px] text-slate-400 underline transition hover:text-slate-200"
+          >
+            show all cells
+          </button>
+        </div>
       )}
 
       {/* Legend */}

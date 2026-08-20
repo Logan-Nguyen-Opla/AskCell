@@ -228,6 +228,16 @@ def detect(
                         float(cz.std(axis=0).mean()), 3
                     ),
                     "deviant_markers": _deviant_markers(cz, reference.markers),
+                    # Every marker, not just the top deviations. Subtype
+                    # matching needs the whole phenotype -- a marker being
+                    # *absent* is as diagnostic as one being bright (CD20
+                    # negative is what separates a blast from a mature B cell),
+                    # and an absent marker never appears in a "top deviations"
+                    # list ranked by magnitude.
+                    "marker_z": {
+                        m: round(float(v), 2)
+                        for m, v in zip(reference.markers, cz.mean(axis=0))
+                    },
                 }
             )
 

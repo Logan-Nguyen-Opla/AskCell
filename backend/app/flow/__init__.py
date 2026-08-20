@@ -1,6 +1,7 @@
 """Flow / mass cytometry ingest, reference building and detection for AskCell."""
 
 from .detect import detect
+from .interpret import call_marker, interpret_population, interpret_report
 from .fcs_ingest import COFACTOR_FLUOR, COFACTOR_MASS, read_fcs
 from .panel import (
     canonical_marker,
@@ -32,4 +33,8 @@ __all__ = [
     "fit_reference_from_files",
     # detection
     "detect",
+    # interpretation
+    "interpret_report",
+    "interpret_population",
+    "call_marker",
 ]

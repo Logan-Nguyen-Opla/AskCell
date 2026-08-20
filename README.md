@@ -55,24 +55,63 @@ precursors that are CD19+CD10+ with dim CD45, near enough the blast phenotype to
 fool a single-marker rule. They are odd too, but spread smoothly along a
 maturation path instead of knotted at one point.
 
+### What comes out
+
+Three things, from the same computation:
+
+1. **A picture.** The healthy reference as a dim grey cloud, the patient's cells
+   on top, abnormal ones in red. A red clump outside the grey cloud is the whole
+   result in one frame.
+2. **A percentage** — the number clinical practice actually uses.
+3. **A phenotype**, recovered rather than assumed: which markers deviate and by
+   how many standard deviations, plus a ranked list of entities the pattern
+   resembles and the confirmatory tests each would need.
+
+Ask about any of it in plain language (`Ask AskCell` tab). The agent reads the
+finished report through tools and cannot invent a figure — every number it
+quotes came from a tool call, and the calls it made are listed under each answer.
+
 ### Try it
 
 ```bash
 cd backend
 python make_mock_fcs.py        # generate the fixtures (~52 MB, seeded)
-python run_detection.py        # run the whole pipeline, print reports
+python run_detection.py        # run the pipeline, print reports
+python benchmark.py            # full validation sweep -> benchmark/
 ```
 
-Measured on those fixtures:
+### Measured performance
 
-| Specimen | True abnormal | Reported | Sensitivity | Precision |
-| -------- | ------------- | -------- | ----------- | --------- |
-| `patient_overt`  | 14,258 (25%)   | 25.51%  | 100.00% | 100.00% |
-| `patient_mrd`    | 191 (0.05%)    | 0.051%  | 98.95%  | 100.00% |
-| `patient_normal` | 0              | 0%      | —       | correctly negative |
+From `benchmark.py` — a dilution series at three acquisition depths, healthy
+controls, and repeat runs. Full table in [`backend/benchmark/benchmark.md`](backend/benchmark/benchmark.md).
 
-400,000 events in ~5 s. The healthy control contains hematogones on purpose —
-not flagging it is the harder half of the problem.
+| Metric | Value |
+| --- | --- |
+| Limit of detection (500k events) | **0.01%** |
+| Mean sensitivity, detected cases | 97.94% |
+| Mean precision, detected cases | 100.00% |
+| Specificity (healthy controls) | 100% (4/4) |
+| Reproducibility | bit-identical across repeat runs |
+| Throughput | ~1.5 s per 100k events |
+
+**The limit is a cell count, not a percentage:**
+
+| Events acquired | Lowest fraction found | ≈ cells |
+| --- | --- | --- |
+| 50,000 | 0.1% | ~50 |
+| 200,000 | 0.05% | ~100 |
+| 500,000 | 0.01% | ~50 |
+
+Across a tenfold range of depth the smallest detectable population stayed at
+roughly 50–100 cells while the *percentage* moved by a factor of ten. The
+detector needs a certain number of cells to recognise a population as a
+population; what fraction that represents is set by how many events you
+acquired. So to lower the detectable percentage, acquire more events — the same
+tradeoff clinical MRD assays make, and why they run millions of events.
+
+The healthy controls contain hematogones on purpose. Not flagging them is the
+harder half of the problem, and the reason specificity is reported alongside
+sensitivity rather than after it.
 
 ### Using your own data
 
@@ -85,10 +124,23 @@ The reference needs at least two specimens because the threshold is calibrated b
 holding one out. Marker intensities are not comparable across antibody panels, so
 a specimen is refused outright if it lacks any marker the reference was built on.
 
+### What it will not do
+
+The tool reports what a population *resembles*, never what it *is*.
+Immunophenotype alone cannot classify a blood cancer — morphology, cytogenetics
+and molecular tests are required, and two specimens with an identical flow
+phenotype can be different diseases. So every candidate entity is reported with
+the evidence for and against it and the tests that would actually settle it.
+
+It also gives no treatment advice. It will describe what published literature
+says is used for an entity, framed as background.
+
 > ⚠️ **Research and educational use only.** Not a diagnostic device, and not
-> clinically validated. One parameter (the cluster-linking radius) is calibrated
-> against synthetic data and must be re-measured on real specimens; the guard
-> test is `tests/test_flow_detect.py::test_radius_sits_in_the_measured_gap`.
+> clinically validated. All performance figures are on synthetic data, which
+> measures internal consistency rather than clinical accuracy. One parameter
+> (the cluster-linking radius) is calibrated against synthetic data and must be
+> re-measured on real specimens; the guard test is
+> `tests/test_flow_detect.py::test_radius_sits_in_the_measured_gap`.
 
 ---
 
@@ -118,18 +170,26 @@ Then:
    window. Leave it open too.
 4. Open your browser to **http://localhost:5173**.
 
-That's it. You'll see ~3,000 cells rendered. Pan by dragging, zoom with the
-scroll wheel, hover a cell for its ID.
+That's it. The cytometry screen opens with a healthy reference already built.
+Pick a specimen from `backend/sample_data/` — start with `patient_overt.fcs`,
+then try `patient_normal.fcs` and `patient_mrd.fcs`.
 
-### To turn on the AI chat (optional)
+Pan by dragging, zoom with the scroll wheel, hover a cell for its details. The
+button at the bottom switches to the scRNA-seq browser.
 
-The scatterplot works with **no key**. To enable the chat:
+> **First run only:** if `sample_data/` has no `.fcs` files, generate them with
+> `cd backend && python make_mock_fcs.py`.
 
-1. Get a free Gemini key: https://aistudio.google.com/apikey
-2. Open `backend\.env`, replace `your_gemini_api_key_here` with your key, save.
+### To turn on the AI explanation (optional)
+
+Detection works with **no key** — only the `Ask AskCell` panel needs one.
+
+1. Get an Anthropic API key: https://console.anthropic.com/settings/keys
+2. Copy `backend\.env.example` to `backend\.env` and put your key in it.
 3. Restart `run-backend.bat`.
 
-Now ask the sidebar things like *"What is the expression profile of CD3D?"*
+Then click **Explain this result**, or ask things like *"how confident is this,
+and what would change it?"*
 
 ---
 
@@ -157,44 +217,69 @@ npm run dev                     # open http://localhost:5173
 ## Architecture
 
 ```
-askcell-mvp/
-├── run-backend.bat            # one-click backend (Windows)
-├── run-frontend.bat           # one-click frontend (Windows)
-├── backend/                   # FastAPI Python core
+AskCell/
+├── run-backend.bat / run-frontend.bat   # one-click launch (Windows)
+├── backend/                             # FastAPI Python core
 │   ├── app/
-│   │   ├── main.py            # Gateway + startup auto-load of sample data
-│   │   ├── cell_engine.py     # AnnData engine + JSON serialization guards
-│   │   └── ai_agent.py        # Gemini client + get_gene_expression tool
-│   ├── sample_data/
-│   │   └── mock_pbmc.h5ad      # bundled mock dataset (auto-loaded)
-│   ├── make_mock_data.py       # regenerates the mock dataset (optional)
-│   ├── requirements.txt
-│   └── .env.example
-└── frontend/                  # React (Vite) desktop app
-    ├── src/
-    │   ├── components/
-    │   │   ├── UmapViewer.jsx   # Deck.gl GPU scatterplot (OrthographicView)
-    │   │   └── ChatSidebar.jsx  # Conversational AI sidebar
-    │   ├── App.jsx             # 70/30 layout, state, auto-loads on open
-    │   └── main.jsx
-    ├── package.json
-    └── .env.example
+│   │   ├── main.py            # gateway; reference fitted at startup
+│   │   ├── flow/              # ---- the cytometry pipeline ----
+│   │   │   ├── panel.py           marker names + panel fingerprinting
+│   │   │   ├── fcs_ingest.py      FCS -> AnnData, compensation, arcsinh
+│   │   │   ├── qc.py              debris / doublet / dead-cell gating
+│   │   │   ├── reference.py       "what normal looks like" + calibration
+│   │   │   ├── detect.py          two-stage detection
+│   │   │   └── interpret.py       candidate entities + evidence
+│   │   ├── flow_engine.py     holds reference + specimen, shared embedding
+│   │   ├── flow_agent.py      Claude agent over the finished report
+│   │   ├── cell_engine.py     scRNA-seq engine (single dataset)
+│   │   └── ai_agent.py        scRNA-seq gene-expression agent
+│   ├── make_mock_fcs.py       generates the cytometry fixtures
+│   ├── run_detection.py       CLI: whole pipeline, printed report
+│   ├── benchmark.py           validation sweep -> benchmark/
+│   ├── tests/                 92 tests
+│   └── sample_data/
+└── frontend/                            # React (Vite)
+    └── src/
+        ├── Root.jsx           mode switch between the two surfaces
+        ├── FlowApp.jsx        the cytometry screen
+        ├── App.jsx            the scRNA-seq browser
+        └── components/
+            ├── FlowViewer.jsx     healthy cloud + specimen, abnormal in red
+            ├── FlowReport.jsx     verdict, stages, phenotype, differential
+            ├── FlowChat.jsx       plain-language explanation + follow-ups
+            └── UmapViewer.jsx     scRNA-seq scatterplot
 ```
 
 ---
 
 ## How it works
 
+**Cytometry:**
+
 ```
-[open app] → backend auto-loads mock_pbmc.h5ad → Deck.gl renders @ 60 FPS
-                                                          │
-[Chat: "Check expression of CD3D"] → Gemini calls get_gene_expression
+[open app] → reference fitted from healthy .fcs (cached) → grey cloud renders
+                              │
+[drop patient .fcs] → gate → score every cell → cluster the flagged ones
+                              │
+                        red clump + percentage + phenotype
+                              │
+[Ask: "how confident is this?"] → Claude reads the report through tools
+                              → answer, with the tools it consulted shown
+```
+
+**scRNA-seq:**
+
+```
+[switch mode] → mock_pbmc.h5ad auto-loaded → Deck.gl renders @ 60 FPS
+                              │
+[Chat: "Check expression of CD3D"] → Claude calls get_gene_expression
         → real mean/max metrics from the matrix → synthesized answer
 ```
 
-The mock dataset has 3,000 immune cells in 5 clusters with real marker genes
-(CD3D, MS4A1, NKG7, LYZ, PDCD1, GAPDH, …), so the AI's answers are
-biologically sensible.
+The cytometry fixtures are 60k–400k events on a 14-colour B-ALL panel; the
+scRNA-seq mock has 3,000 immune cells in 5 clusters with real marker genes
+(CD3D, MS4A1, NKG7, LYZ, PDCD1, GAPDH, …), so both agents answer from real
+numbers.
 
 ---
 
@@ -233,6 +318,9 @@ The app also warns you before a large upload and shows a live progress bar + ETA
 | POST   | `/api/flow/reference`         | `multipart` 2+ `.fcs` files   | `{ message, reference }`                       |
 | POST   | `/api/flow/sample`            | `multipart` one `.fcs` file   | full detection report                          |
 | GET    | `/api/flow/report`            | —                             | the report for the loaded specimen             |
+| GET    | `/api/flow/interpret`         | —                             | ranked candidate entities per population       |
+| POST   | `/api/flow/explain`           | —                             | `{ reply, tools_used }` — plain-language       |
+| POST   | `/api/flow/chat`              | `{ "message": "..." }`        | `{ reply, tools_used }`                        |
 | GET    | `/api/flow/scatter`           | —                             | `{ reference, cells: [{id,x,y,s,p}] }`         |
 | GET    | `/api/flow/population/{n}`    | —                             | `{ label, n, ids }`                            |
 

@@ -33,7 +33,8 @@ from .cell_engine import cell_engine_instance
 # Configuration
 # --------------------------------------------------------------------------- #
 # Haiku 4.5 — fast and cost-effective, ample for this single-tool Q&A agent.
-# Swap to "claude-sonnet-4-6" or "claude-opus-4-8" for higher reasoning depth.
+# The cytometry agent (flow_agent.py) uses Opus 5 instead, because reasoning over
+# a multi-stage detection result is a materially harder task than one gene lookup.
 MODEL = "claude-haiku-4-5"
 MAX_TOKENS = 1024
 

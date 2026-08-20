@@ -3,15 +3,31 @@ main.py
 =======
 FastAPI gateway for AskCell.
 
-Routes
-------
-POST /api/upload   multipart .h5ad  -> parse + cache matrix in memory
-GET  /api/umap                      -> lean {id, x, y} coordinate array
-POST /api/chat     {message}        -> Gemini reply (with tool execution)
-GET  /api/status                    -> dataset metadata (handy for the UI)
+Two workflows share this app.
 
-CORS is wide-open for local development; lock down ``allow_origins`` before any
-real deployment.
+Cytometry (``/api/flow/*``) is the primary one: compare a patient .fcs specimen
+against a reference built from healthy specimens and report abnormal cell
+populations.
+
+    GET  /api/flow/status               reference / specimen state
+    POST /api/flow/reference            build "normal" from 2+ healthy .fcs
+    POST /api/flow/sample               analyse one patient .fcs
+    GET  /api/flow/report               the detection report
+    GET  /api/flow/interpret            ranked candidate entities
+    POST /api/flow/explain              plain-language interpretation (Claude)
+    POST /api/flow/chat                 follow-up questions about the result
+    GET  /api/flow/scatter              viewer points, reference + specimen
+    GET  /api/flow/population/{label}   event ids in one population
+
+scRNA-seq (the original browser) reads a single .h5ad at a time:
+
+    POST /api/upload   multipart .h5ad  -> parse + cache matrix in memory
+    GET  /api/umap                      -> lean {id, x, y} coordinate array
+    POST /api/chat     {message}        -> Claude reply (with tool execution)
+    GET  /api/status                    -> dataset metadata
+
+``ALLOWED_ORIGINS`` defaults to localhost only; set it before any real
+deployment.
 """
 
 from __future__ import annotations
@@ -134,6 +150,11 @@ class SelectionRequest(BaseModel):
     cell_ids: list[int]
 
 
+class FlowChatRequest(BaseModel):
+    message: str
+    history: list[dict] | None = None
+
+
 # --------------------------------------------------------------------------- #
 # Routes
 # --------------------------------------------------------------------------- #
@@ -203,7 +224,7 @@ def get_status() -> dict:
 
 @app.post("/api/chat")
 def chat(req: ChatRequest) -> dict:
-    """Run a user message through the Gemini agent (with tool execution)."""
+    """Run a user message through the Claude agent (with tool execution)."""
     if not cell_engine_instance.is_loaded():
         raise HTTPException(
             status_code=400,
@@ -416,6 +437,62 @@ def flow_scatter() -> dict:
             status_code=400, detail="No healthy reference is loaded."
         )
     return flow_session.scatter()
+
+
+@app.get("/api/flow/interpret")
+def flow_interpret() -> dict:
+    """Ranked candidate entities for each detected population.
+
+    Kept separate from /api/flow/report because it is a different kind of claim:
+    the report is a measurement, this is a hypothesis about what the measurement
+    resembles. Merging them would blur that line.
+    """
+    if not flow_session.has_sample():
+        raise HTTPException(
+            status_code=400, detail="No specimen has been analysed yet."
+        )
+    from .flow.interpret import interpret_report
+
+    return interpret_report(flow_session.public_report())
+
+
+@app.post("/api/flow/explain")
+def flow_explain() -> dict:
+    """Plain-language interpretation of the loaded specimen, via Claude."""
+    if not flow_session.has_sample():
+        raise HTTPException(
+            status_code=400, detail="No specimen has been analysed yet."
+        )
+    from . import flow_agent
+
+    try:
+        return flow_agent.explain_current()
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Agent error: {exc}") from exc
+
+
+@app.post("/api/flow/chat")
+def flow_chat(req: FlowChatRequest) -> dict:
+    """Ask a follow-up question about the loaded specimen's result."""
+    if not flow_session.has_sample():
+        raise HTTPException(
+            status_code=400,
+            detail="Analyse a specimen before asking questions about it.",
+        )
+    message = (req.message or "").strip()
+    if not message:
+        raise HTTPException(status_code=400, detail="Message cannot be empty.")
+
+    from . import flow_agent
+
+    try:
+        return flow_agent.run_flow_chat(message, req.history)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Agent error: {exc}") from exc
 
 
 @app.get("/api/flow/population/{label}")

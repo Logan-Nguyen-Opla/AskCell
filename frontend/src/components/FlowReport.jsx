@@ -20,7 +20,12 @@ import React from "react";
  * it is what lets someone check the result instead of trusting it.
  */
 
-export default function FlowReport({ report, onHighlightPopulation }) {
+export default function FlowReport({
+  report,
+  interpretation = null,
+  onHighlightPopulation,
+  focusPopulation = null,
+}) {
   if (!report) return null;
 
   if (report.ok === false) {
@@ -147,12 +152,29 @@ export default function FlowReport({ report, onHighlightPopulation }) {
                 {onHighlightPopulation && (
                   <button
                     onClick={() => onHighlightPopulation(pop.label)}
-                    className="mt-2 w-full rounded border border-slate-700 px-2 py-1 font-mono text-[10px] text-slate-400 transition hover:border-rose-500/50 hover:text-rose-300"
+                    className={`mt-2 w-full rounded border px-2 py-1 font-mono text-[10px] transition ${
+                      focusPopulation === pop.label
+                        ? "border-rose-500/60 bg-rose-500/10 text-rose-200"
+                        : "border-slate-700 text-slate-400 hover:border-rose-500/50 hover:text-rose-300"
+                    }`}
                   >
-                    show these cells
+                    {focusPopulation === pop.label
+                      ? "showing — click to show all"
+                      : "show these cells"}
                   </button>
                 )}
               </div>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {/* ---------- what the pattern resembles ---------- */}
+      {interpretation?.populations?.length > 0 && (
+        <Section title="what the pattern resembles">
+          <div className="space-y-3">
+            {interpretation.populations.map((pop) => (
+              <Differential key={pop.label} pop={pop} />
             ))}
           </div>
         </Section>
@@ -215,6 +237,158 @@ export default function FlowReport({ report, onHighlightPopulation }) {
         Research and educational use only. Not a diagnostic device and not
         clinically validated.
       </p>
+    </div>
+  );
+}
+
+/**
+ * One population's ranked differential.
+ *
+ * `match` and `phenotype match` are shown separately on purpose. When the two
+ * differ, structure is doing the work -- and for the B-ALL / hematogone pair
+ * that is the *only* thing doing the work, since their marker patterns overlap.
+ * Collapsing them into one number would hide which half of the argument the
+ * conclusion rests on.
+ */
+function Differential({ pop }) {
+  const [openIdx, setOpenIdx] = React.useState(0);
+
+  return (
+    <div className="rounded-lg border border-slate-700 bg-slate-900/60 p-3">
+      <div className="mb-2 flex items-baseline justify-between">
+        <span className="font-mono text-xs text-slate-200">
+          population {pop.label + 1}
+        </span>
+        <span className="font-mono text-[10px] text-slate-500">
+          {pop.structure}
+        </span>
+      </div>
+
+      {pop.clonality_note && (
+        <p className="mb-2 text-[11px] leading-relaxed text-slate-400">
+          {pop.clonality_note}
+        </p>
+      )}
+
+      <div className="space-y-1.5">
+        {pop.candidates.map((c, i) => {
+          const open = openIdx === i;
+          const structureHurt = c.structure_consistency < 1;
+          return (
+            <div
+              key={c.name}
+              className={`rounded border ${
+                open ? "border-slate-600" : "border-slate-800"
+              } bg-slate-950/40`}
+            >
+              <button
+                onClick={() => setOpenIdx(open ? -1 : i)}
+                className="flex w-full items-center gap-2 px-2 py-1.5 text-left"
+              >
+                <span
+                  className={`font-mono text-[11px] font-semibold ${
+                    c.benign ? "text-emerald-300" : "text-rose-300"
+                  }`}
+                >
+                  {c.match}%
+                </span>
+                <span className="min-w-0 flex-1 truncate text-[11px] text-slate-200">
+                  {c.short}
+                </span>
+                {c.benign && (
+                  <span className="rounded bg-emerald-500/10 px-1 py-0.5 font-mono text-[8px] uppercase tracking-wide text-emerald-400">
+                    benign
+                  </span>
+                )}
+                <span className="font-mono text-[9px] text-slate-600">
+                  {open ? "−" : "+"}
+                </span>
+              </button>
+
+              {open && (
+                <div className="space-y-2 border-t border-slate-800 px-2 py-2">
+                  <div className="font-mono text-[9px] text-slate-500">
+                    {c.lineage}
+                  </div>
+
+                  <div className="flex gap-3 font-mono text-[9px]">
+                    <span className="text-slate-500">
+                      phenotype{" "}
+                      <span className="text-slate-300">{c.phenotype_match}%</span>
+                    </span>
+                    <span className={structureHurt ? "text-amber-400" : "text-slate-500"}>
+                      structure{" "}
+                      <span className={structureHurt ? "text-amber-300" : "text-slate-300"}>
+                        x{c.structure_consistency}
+                      </span>
+                    </span>
+                  </div>
+
+                  {c.structure_reason && (
+                    <p
+                      className={`text-[10px] leading-relaxed ${
+                        structureHurt ? "text-amber-200/80" : "text-slate-400"
+                      }`}
+                    >
+                      {c.structure_reason}
+                    </p>
+                  )}
+
+                  {c.evidence_for.length > 0 && (
+                    <EvidenceList label="supports" items={c.evidence_for} tone="emerald" />
+                  )}
+                  {c.evidence_against.length > 0 && (
+                    <EvidenceList label="against" items={c.evidence_against} tone="rose" />
+                  )}
+
+                  <div>
+                    <div className="mb-0.5 font-mono text-[9px] uppercase tracking-widest text-slate-600">
+                      would need
+                    </div>
+                    <ul className="space-y-0.5">
+                      {c.confirm_with.map((t) => (
+                        <li key={t} className="flex gap-1 text-[10px] leading-relaxed text-slate-400">
+                          <span className="text-slate-600">·</span>
+                          <span>{t}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <p className="text-[10px] leading-relaxed text-slate-500">
+                    {c.note}
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="mt-2 text-[9px] leading-relaxed text-slate-600">
+        {pop.disclaimer}
+      </p>
+    </div>
+  );
+}
+
+function EvidenceList({ label, items, tone }) {
+  const colour = tone === "emerald" ? "text-emerald-300/80" : "text-rose-300/80";
+  return (
+    <div>
+      <div className="mb-0.5 font-mono text-[9px] uppercase tracking-widest text-slate-600">
+        {label}
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {items.map((it) => (
+          <span
+            key={it}
+            className={`rounded bg-slate-800/60 px-1.5 py-0.5 font-mono text-[9px] ${colour}`}
+          >
+            {it}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
