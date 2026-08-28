@@ -190,9 +190,9 @@ export default function FlowApp() {
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-200">
       {/* ================= left rail ================= */}
-      <aside className="flex w-80 shrink-0 flex-col gap-4 overflow-y-auto border-r border-slate-800 p-4">
+      <aside className="flex w-80 shrink-0 flex-col gap-4 overflow-y-auto border-r border-violet-950/60 p-4">
         <div>
-          <h1 className="font-mono text-sm font-semibold tracking-tight text-slate-100">
+          <h1 className="bg-brand-gradient bg-clip-text font-mono text-base font-bold tracking-tight text-transparent">
             AskCell
           </h1>
           <p className="mt-0.5 text-[11px] leading-relaxed text-slate-500">
@@ -239,7 +239,7 @@ export default function FlowApp() {
           <button
             onClick={() => refInput.current?.click()}
             disabled={busy != null}
-            className="mt-2 w-full rounded-lg border border-slate-700 px-3 py-1.5 text-[11px] text-slate-300 transition hover:border-indigo-500/50 hover:text-indigo-200 disabled:opacity-40"
+            className="mt-2 w-full rounded-lg border border-slate-700 px-3 py-1.5 text-[11px] text-slate-300 transition hover:scale-[1.02] hover:border-violet-500/50 hover:text-violet-200 disabled:opacity-40 disabled:hover:scale-100"
           >
             {reference ? "replace with my own healthy files" : "choose healthy files"}
           </button>
@@ -257,7 +257,7 @@ export default function FlowApp() {
           <button
             onClick={() => sampleInput.current?.click()}
             disabled={busy != null || !reference}
-            className="w-full rounded-lg bg-indigo-600 px-3 py-2 text-xs font-medium text-white transition hover:bg-indigo-500 disabled:opacity-40"
+            className="w-full rounded-lg bg-brand-gradient bg-200 bg-[position:0%_50%] px-3 py-2 text-xs font-semibold text-white shadow-glow-violet transition-all duration-300 hover:scale-[1.02] hover:bg-[position:100%_50%] disabled:opacity-40 disabled:hover:scale-100"
           >
             {sampleName ? "analyse another specimen" : "choose an .fcs specimen"}
           </button>
@@ -276,7 +276,7 @@ export default function FlowApp() {
                 type="checkbox"
                 checked={showReference}
                 onChange={(e) => setShowReference(e.target.checked)}
-                className="accent-indigo-500"
+                className="accent-violet-500"
               />
               show healthy reference behind
             </label>
@@ -289,10 +289,10 @@ export default function FlowApp() {
                 <button
                   key={mode}
                   onClick={() => setColorMode(mode)}
-                  className={`flex-1 rounded border px-2 py-1 text-[10px] transition ${
+                  className={`flex-1 rounded border px-2 py-1 text-[10px] font-medium transition ${
                     colorMode === mode
-                      ? "border-indigo-500/60 bg-indigo-500/10 text-indigo-200"
-                      : "border-slate-700 text-slate-400 hover:text-slate-200"
+                      ? "border-transparent bg-brand-gradient text-white shadow-glow-violet"
+                      : "border-slate-700 text-slate-400 hover:border-violet-500/40 hover:text-slate-200"
                   }`}
                 >
                   {label}
@@ -308,14 +308,14 @@ export default function FlowApp() {
                 max="8"
                 value={pointSize}
                 onChange={(e) => setPointSize(Number(e.target.value))}
-                className="mt-1 w-full accent-indigo-500"
+                className="mt-1 w-full accent-violet-500"
               />
             </label>
           </Panel>
         )}
 
         {error && (
-          <div className="rounded-lg border border-rose-500/40 bg-rose-500/5 p-2.5 text-[11px] leading-relaxed text-rose-200">
+          <div className="animate-fade-up rounded-lg border border-rose-500/40 bg-rose-500/10 p-2.5 text-[11px] leading-relaxed text-rose-200 shadow-glow-rose">
             {error}
           </div>
         )}
@@ -345,8 +345,8 @@ export default function FlowApp() {
         )}
 
         {busy && (
-          <div className="absolute inset-x-0 top-0 z-20 bg-slate-900/90 px-4 py-2 backdrop-blur">
-            <div className="mb-1 flex justify-between font-mono text-[10px] text-indigo-200">
+          <div className="glass-panel absolute inset-x-0 top-0 z-20 rounded-none px-4 py-2">
+            <div className="mb-1 flex justify-between font-mono text-[10px] text-violet-200">
               <span>
                 {busy === "reference"
                   ? "building the healthy reference…"
@@ -358,9 +358,9 @@ export default function FlowApp() {
                   : "computing on server"}
               </span>
             </div>
-            <div className="h-1 overflow-hidden rounded-full bg-slate-800">
+            <div className="h-1.5 overflow-hidden rounded-full bg-slate-800">
               <div
-                className="h-full rounded-full bg-indigo-500 transition-[width] duration-200"
+                className="h-full animate-gradient-shift rounded-full bg-brand-gradient bg-200 transition-[width] duration-200"
                 style={{
                   width:
                     progress != null && progress < 99.5
@@ -374,9 +374,9 @@ export default function FlowApp() {
 
         {dragging && (
           <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-slate-950/85 backdrop-blur-sm">
-            <div className="rounded-2xl border-2 border-dashed border-indigo-400 px-10 py-8 text-center">
+            <div className="glass-panel rounded-2xl border-2 border-dashed border-violet-400/70 px-10 py-8 text-center shadow-glow-violet">
               <div className="mb-2 text-3xl">⬇</div>
-              <p className="font-medium text-indigo-200">Drop an .fcs file</p>
+              <p className="bg-brand-gradient bg-clip-text font-semibold text-transparent">Drop an .fcs file</p>
               <p className="mt-1 text-[11px] text-slate-400">
                 one file = patient specimen · several = new healthy reference
               </p>
@@ -386,10 +386,10 @@ export default function FlowApp() {
       </main>
 
       {/* ================= right: the result ================= */}
-      <aside className="flex h-full w-96 shrink-0 flex-col overflow-hidden border-l border-slate-800">
+      <aside className="flex h-full w-96 shrink-0 flex-col overflow-hidden border-l border-violet-950/60">
         {report ? (
           <>
-            <div className="flex shrink-0 border-b border-slate-800">
+            <div className="flex shrink-0 border-b border-violet-950/60">
               {[
                 ["report", "Result"],
                 ["ask", "Ask AskCell"],
@@ -399,7 +399,7 @@ export default function FlowApp() {
                   onClick={() => setRightTab(id)}
                   className={`flex-1 px-3 py-2.5 text-xs font-medium transition ${
                     rightTab === id
-                      ? "border-b-2 border-indigo-400 text-indigo-200"
+                      ? "border-b-2 border-cyan-400 bg-brand-gradient-soft text-violet-200"
                       : "text-slate-500 hover:text-slate-300"
                   }`}
                 >
@@ -424,12 +424,12 @@ export default function FlowApp() {
           </>
         ) : (
           <div className="flex h-full flex-col items-center justify-center px-6 text-center">
-            <div className="mb-3 grid grid-cols-5 gap-1 opacity-25">
+            <div className="mb-3 grid grid-cols-5 gap-1 opacity-40">
               {Array.from({ length: 25 }).map((_, i) => (
                 <span
                   key={i}
                   className={`h-1.5 w-1.5 rounded-full ${
-                    i === 12 || i === 17 ? "bg-rose-400" : "bg-slate-400"
+                    i === 12 || i === 17 ? "bg-rose-400 shadow-glow-rose" : "bg-violet-400/60"
                   }`}
                 />
               ))}
@@ -448,8 +448,8 @@ export default function FlowApp() {
 
 function Panel({ title, children }) {
   return (
-    <section className="rounded-xl border border-slate-800 bg-slate-900/40 p-3">
-      <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-slate-500">
+    <section className="glass-panel rounded-xl p-3">
+      <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-slate-400">
         {title}
       </div>
       {children}
@@ -469,17 +469,21 @@ function Line({ k, v }) {
 function Empty({ busy, progress }) {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
-      <div className="mb-5 grid grid-cols-6 gap-1.5 opacity-25">
+      <div className="mb-5 grid grid-cols-6 gap-1.5 opacity-40">
         {Array.from({ length: 36 }).map((_, i) => (
           <span
             key={i}
-            className="h-1.5 w-1.5 rounded-full bg-slate-400"
+            className="h-1.5 w-1.5 rounded-full bg-violet-400"
             style={{ opacity: 0.2 + ((i * 37) % 80) / 100 }}
           />
         ))}
       </div>
-      <h3 className="text-base font-medium text-slate-300">
-        {busy ? "Working…" : "No reference loaded"}
+      <h3 className="text-base font-medium text-slate-200">
+        {busy ? (
+          <span className="bg-brand-gradient bg-clip-text text-transparent">Working…</span>
+        ) : (
+          "No reference loaded"
+        )}
       </h3>
       <p className="mt-2 max-w-sm text-center text-xs leading-relaxed text-slate-500">
         {busy

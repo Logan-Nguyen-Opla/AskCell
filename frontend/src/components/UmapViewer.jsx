@@ -258,11 +258,13 @@ export default function UmapViewer({
                        x: ${object.x.toFixed(3)} &nbsp; y: ${object.y.toFixed(3)}
                      </div>`,
               style: {
-                backgroundColor: "#0f172a",
+                backgroundColor: "rgba(12, 10, 24, 0.92)",
                 color: "#e2e8f0",
-                border: "1px solid #312e81",
-                borderRadius: "8px",
+                border: "1px solid #7c3aed",
+                borderRadius: "10px",
                 padding: "8px 10px",
+                boxShadow: "0 0 18px -4px rgba(124,58,237,0.45)",
+                backdropFilter: "blur(6px)",
               },
             }
           }
@@ -284,7 +286,7 @@ export default function UmapViewer({
 
       {/* Continuous color bar (gene mode) */}
       {geneMode && (
-        <div className="absolute right-4 top-4 rounded-xl border border-slate-800 bg-slate-900/80 p-3 backdrop-blur">
+        <div className="glass-panel absolute right-4 top-4 rounded-xl p-3">
           <div className="mb-1.5 font-mono text-[11px] text-slate-200">
             {geneValues.gene}
           </div>
@@ -305,7 +307,7 @@ export default function UmapViewer({
       )}
 
       {/* Cell counter (bottom-left) */}
-      <div className="pointer-events-none absolute bottom-4 left-4 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-1.5 font-mono text-xs text-indigo-300 backdrop-blur">
+      <div className="glass-panel-soft pointer-events-none absolute bottom-4 left-4 rounded-lg px-3 py-1.5 font-mono text-xs text-indigo-300">
         {visibleCells.length.toLocaleString()}
         {hiddenSet.size > 0 ? ` / ${cells.length.toLocaleString()}` : ""} cells
         {selectMode && (
@@ -316,7 +318,7 @@ export default function UmapViewer({
       {/* Reset view (bottom-right) */}
       <button
         onClick={resetView}
-        className="absolute bottom-4 right-4 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-1.5 font-mono text-xs text-slate-300 backdrop-blur transition hover:border-emerald-500/50 hover:text-emerald-300"
+        className="glass-panel-soft absolute bottom-4 right-4 rounded-lg px-3 py-1.5 font-mono text-xs text-slate-300 transition hover:scale-105 hover:text-cyan-300 hover:shadow-glow-cyan"
       >
         reset view
       </button>
@@ -325,7 +327,7 @@ export default function UmapViewer({
       <button
         onClick={toggleFullscreen}
         title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
-        className="absolute left-4 top-4 rounded-lg border border-slate-800 bg-slate-900/80 p-1.5 text-slate-400 backdrop-blur transition hover:border-indigo-500/50 hover:text-indigo-300"
+        className="glass-panel-soft absolute left-4 top-4 rounded-lg p-1.5 text-slate-400 transition hover:scale-105 hover:text-violet-300 hover:shadow-glow-violet"
       >
         {isFullscreen ? (
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

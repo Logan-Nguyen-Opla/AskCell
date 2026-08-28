@@ -32,18 +32,19 @@ import { ScatterplotLayer } from "@deck.gl/layers";
  *   onClearFocus: () => void
  */
 
-const REF_RGB = [71, 85, 105];        // slate-600, the healthy backdrop
-const NORMAL_RGB = [148, 163, 184];   // slate-400, patient cells that look fine
-const ABNORMAL_RGB = [244, 63, 94];   // rose-500, the finding
+const REF_RGB = [71, 85, 105];        // slate-600, the healthy backdrop (neutral, not a data series)
+const NORMAL_RGB = [148, 163, 184];   // slate-400, patient cells that look fine (neutral)
+const ABNORMAL_RGB = [208, 59, 59];   // reserved status color "critical" #d03b3b — the finding
 
 // Warm ramp for continuous score mode: cool where a cell resembles healthy
-// tissue, hot where it does not.
+// tissue, hot where it does not. Anchored on the reserved "critical" status
+// color at the hot end so it reads consistently with population-mode red.
 const SCORE_RAMP = [
   [56, 89, 138],
   [86, 140, 170],
   [214, 191, 105],
   [232, 128, 62],
-  [244, 63, 94],
+  [208, 59, 59],
 ];
 
 function rampRgb(t) {
@@ -258,7 +259,7 @@ export default function FlowViewer({
             object &&
             object.id != null && {
               html: `<div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6">
-                       <b style="color:${object.p >= 0 ? "#fb7185" : "#94a3b8"}">
+                       <b style="color:${object.p >= 0 ? "#e66767" : "#94a3b8"}">
                          ${object.p >= 0 ? "ABNORMAL" : "looks normal"}
                        </b><br/>
                        distance from normal: <b>${object.s.toFixed(3)}</b><br/>
@@ -266,11 +267,15 @@ export default function FlowViewer({
                        event #${object.id}
                      </div>`,
               style: {
-                backgroundColor: "#0f172a",
+                backgroundColor: "rgba(12, 10, 24, 0.92)",
                 color: "#e2e8f0",
-                border: `1px solid ${object.p >= 0 ? "#9f1239" : "#312e81"}`,
-                borderRadius: "8px",
+                border: `1px solid ${object.p >= 0 ? "#d03b3b" : "#7c3aed"}`,
+                borderRadius: "10px",
                 padding: "8px 10px",
+                boxShadow: object.p >= 0
+                  ? "0 0 18px -4px rgba(208,59,59,0.55)"
+                  : "0 0 18px -4px rgba(124,58,237,0.45)",
+                backdropFilter: "blur(6px)",
               },
             }
           }
@@ -279,7 +284,7 @@ export default function FlowViewer({
 
       {/* Focus banner -- a zoomed view must never look like the full picture */}
       {focused && (
-        <div className="absolute left-1/2 top-4 z-10 flex -translate-x-1/2 items-center gap-3 rounded-full border border-rose-500/50 bg-slate-900/90 px-4 py-1.5 backdrop-blur">
+        <div className="glass-panel-soft absolute left-1/2 top-4 z-10 flex -translate-x-1/2 items-center gap-3 rounded-full px-4 py-1.5 shadow-glow-rose">
           <span className="font-mono text-[11px] text-rose-300">
             showing population {focusPopulation + 1} only
           </span>
@@ -293,7 +298,7 @@ export default function FlowViewer({
       )}
 
       {/* Legend */}
-      <div className="absolute right-4 top-4 rounded-xl border border-slate-800 bg-slate-900/85 p-3 backdrop-blur">
+      <div className="glass-panel absolute right-4 top-4 rounded-xl p-3">
         {colorMode === "score" ? (
           <>
             <div className="mb-1.5 font-mono text-[10px] uppercase tracking-wider text-slate-400">
@@ -325,7 +330,7 @@ export default function FlowViewer({
       </div>
 
       {/* Counters */}
-      <div className="pointer-events-none absolute bottom-4 left-4 rounded-lg border border-slate-800 bg-slate-900/85 px-3 py-1.5 font-mono text-xs backdrop-blur">
+      <div className="glass-panel-soft pointer-events-none absolute bottom-4 left-4 rounded-lg px-3 py-1.5 font-mono text-xs">
         <span className="text-slate-300">
           {cells.length.toLocaleString()} cells
         </span>
@@ -343,7 +348,7 @@ export default function FlowViewer({
 
       <button
         onClick={resetView}
-        className="absolute bottom-4 right-4 rounded-lg border border-slate-800 bg-slate-900/85 px-3 py-1.5 font-mono text-xs text-slate-300 backdrop-blur transition hover:border-emerald-500/50 hover:text-emerald-300"
+        className="glass-panel-soft absolute bottom-4 right-4 rounded-lg px-3 py-1.5 font-mono text-xs text-slate-300 transition hover:scale-105 hover:text-cyan-300 hover:shadow-glow-cyan"
       >
         reset view
       </button>
@@ -351,7 +356,7 @@ export default function FlowViewer({
       <button
         onClick={toggleFullscreen}
         title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
-        className="absolute left-4 top-4 rounded-lg border border-slate-800 bg-slate-900/85 p-1.5 text-slate-400 backdrop-blur transition hover:border-indigo-500/50 hover:text-indigo-300"
+        className="glass-panel-soft absolute left-4 top-4 rounded-lg p-1.5 text-slate-400 transition hover:scale-105 hover:text-violet-300 hover:shadow-glow-violet"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none"
              viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

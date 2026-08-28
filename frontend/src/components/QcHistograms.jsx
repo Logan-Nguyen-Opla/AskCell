@@ -108,7 +108,8 @@ function QcChart({ name, values }) {
               y={H - h}
               width={Math.max(0.5, barW - 1)}
               height={h}
-              className="fill-indigo-400/70"
+              fill="#3987e5"
+              fillOpacity={0.78}
             />
           );
         })}

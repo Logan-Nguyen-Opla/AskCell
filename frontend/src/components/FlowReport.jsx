@@ -46,16 +46,16 @@ export default function FlowReport({
     <div className="space-y-4 overflow-y-auto p-4">
       {/* ---------- headline ---------- */}
       <div
-        className={`rounded-xl border p-4 ${
+        className={`rounded-xl border p-4 backdrop-blur ${
           detected
-            ? "border-rose-500/40 bg-rose-500/5"
+            ? "border-rose-500/40 bg-rose-500/5 shadow-glow-rose"
             : notClonal
               ? "border-amber-500/40 bg-amber-500/5"
-              : "border-emerald-500/40 bg-emerald-500/5"
+              : "border-emerald-500/40 bg-emerald-500/5 shadow-glow-emerald"
         }`}
       >
         <div
-          className={`mb-2 font-mono text-[10px] uppercase tracking-widest ${
+          className={`mb-2 font-mono text-[10px] font-semibold uppercase tracking-widest ${
             detected ? "text-rose-400" : notClonal ? "text-amber-400" : "text-emerald-400"
           }`}
         >
@@ -64,8 +64,10 @@ export default function FlowReport({
 
         <div className="flex items-baseline gap-2">
           <span
-            className={`font-mono text-4xl font-bold ${
-              detected ? "text-rose-300" : "text-emerald-300"
+            className={`bg-clip-text font-mono text-4xl font-bold text-transparent ${
+              detected
+                ? "bg-gradient-to-r from-rose-400 to-red-500"
+                : "bg-gradient-to-r from-emerald-300 to-cyan-300"
             }`}
           >
             {report.abnormal_pct}%
@@ -116,7 +118,7 @@ export default function FlowReport({
             {report.populations.map((pop, i) => (
               <div
                 key={pop.label}
-                className="rounded-lg border border-slate-700 bg-slate-900/60 p-3"
+                className="glass-panel-soft rounded-lg p-3"
               >
                 <div className="mb-2 flex items-center justify-between">
                   <span className="font-mono text-xs text-slate-200">
@@ -154,8 +156,8 @@ export default function FlowReport({
                     onClick={() => onHighlightPopulation(pop.label)}
                     className={`mt-2 w-full rounded border px-2 py-1 font-mono text-[10px] transition ${
                       focusPopulation === pop.label
-                        ? "border-rose-500/60 bg-rose-500/10 text-rose-200"
-                        : "border-slate-700 text-slate-400 hover:border-rose-500/50 hover:text-rose-300"
+                        ? "border-rose-500/60 bg-rose-500/10 text-rose-200 shadow-glow-rose"
+                        : "border-slate-700 text-slate-400 hover:scale-[1.01] hover:border-rose-500/50 hover:text-rose-300"
                     }`}
                   >
                     {focusPopulation === pop.label
@@ -254,7 +256,7 @@ function Differential({ pop }) {
   const [openIdx, setOpenIdx] = React.useState(0);
 
   return (
-    <div className="rounded-lg border border-slate-700 bg-slate-900/60 p-3">
+    <div className="glass-panel-soft rounded-lg p-3">
       <div className="mb-2 flex items-baseline justify-between">
         <span className="font-mono text-xs text-slate-200">
           population {pop.label + 1}
@@ -396,7 +398,7 @@ function EvidenceList({ label, items, tone }) {
 function Section({ title, children }) {
   return (
     <div>
-      <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-slate-500">
+      <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-widest text-slate-400">
         {title}
       </div>
       {children}

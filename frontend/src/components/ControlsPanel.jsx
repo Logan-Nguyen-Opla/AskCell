@@ -52,17 +52,17 @@ function GeneAutocomplete({ value, onChange, onSubmit, allGenes, disabled }) {
           onBlur={() => setTimeout(() => setOpen(false), 120)}
           disabled={disabled}
           placeholder="Add a gene (e.g. CD3D)…"
-          className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5 font-mono text-xs text-slate-100 placeholder:text-slate-600 focus:border-indigo-500/60 focus:outline-none disabled:opacity-50"
+          className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5 font-mono text-xs text-slate-100 placeholder:text-slate-600 focus:border-violet-500/60 focus:outline-none disabled:opacity-50"
         />
       </form>
       {open && suggestions.length > 0 && (
-        <ul className="absolute z-50 mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 py-1 shadow-xl">
+        <ul className="glass-panel absolute z-50 mt-1 w-full rounded-lg py-1">
           {suggestions.map((g) => (
             <li key={g}>
               <button
                 type="button"
                 onMouseDown={() => pick(g)}
-                className="w-full px-3 py-1 text-left font-mono text-xs text-slate-200 hover:bg-indigo-500/20 hover:text-indigo-200"
+                className="w-full px-3 py-1 text-left font-mono text-xs text-slate-200 hover:bg-brand-gradient-soft hover:text-violet-200"
               >
                 {g}
               </button>
@@ -109,12 +109,12 @@ export default function ControlsPanel({
   const hasCategories = categories && categories.length > 0;
 
   return (
-    <div className="flex h-full w-72 shrink-0 flex-col border-r border-slate-800 bg-slate-900/40">
+    <div className="flex h-full w-72 shrink-0 flex-col border-r border-violet-950/60 bg-slate-900/40">
       {/* Branding */}
-      <div className="flex items-center gap-2 border-b border-slate-800 px-4 py-3.5">
+      <div className="flex items-center gap-2 border-b border-violet-950/60 px-4 py-3.5">
         <span className="text-lg">🧬</span>
-        <span className="font-semibold tracking-tight text-slate-100">AskCell</span>
-        <span className="rounded bg-indigo-500/15 px-1.5 py-0.5 font-mono text-[10px] text-indigo-300">
+        <span className="bg-brand-gradient bg-clip-text font-bold tracking-tight text-transparent">AskCell</span>
+        <span className="rounded bg-brand-gradient-soft px-1.5 py-0.5 font-mono text-[10px] text-cyan-300">
           VIP
         </span>
       </div>
@@ -122,21 +122,21 @@ export default function ControlsPanel({
       <div className="askcell-scroll flex-1 space-y-5 overflow-y-auto px-4 py-4">
         {/* Dataset */}
         <Section title="dataset">
-          <div className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2">
+          <div className="glass-panel-soft flex items-center gap-2 rounded-lg px-3 py-2">
             <span className={`h-2 w-2 shrink-0 rounded-full ${s.dot}`} />
             <span className="truncate font-mono text-xs text-slate-300">
               {status === "ready" ? filename || "Ready" : status === "error" ? error || "Error" : s.label}
             </span>
           </div>
           {datasetReady && (
-            <div className="mt-1 font-mono text-[10px] text-indigo-300/80">
+            <div className="mt-1 font-mono text-[10px] text-cyan-300/80">
               {cellCount.toLocaleString()} cells
             </div>
           )}
           <button
             onClick={() => fileRef.current?.click()}
             disabled={status === "uploading"}
-            className="mt-2 w-full rounded-lg border border-indigo-500/40 bg-indigo-500/10 px-3 py-1.5 text-sm font-medium text-indigo-200 transition hover:bg-indigo-500/20 disabled:opacity-50"
+            className="mt-2 w-full rounded-lg bg-brand-gradient bg-200 bg-[position:0%_50%] px-3 py-1.5 text-sm font-semibold text-white shadow-glow-violet transition-all duration-300 hover:scale-[1.02] hover:bg-[position:100%_50%] disabled:opacity-50 disabled:hover:scale-100"
           >
             Upload .h5ad
           </button>
@@ -154,10 +154,10 @@ export default function ControlsPanel({
           <div className="flex gap-1.5">
             <button
               onClick={onUseCellType}
-              className={`flex-1 rounded-md px-2 py-1.5 text-xs transition ${
+              className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition ${
                 colorMode === "celltype"
-                  ? "bg-indigo-500/20 text-indigo-200"
-                  : "border border-slate-800 text-slate-400 hover:text-slate-200"
+                  ? "bg-brand-gradient text-white shadow-glow-violet"
+                  : "border border-slate-800 text-slate-400 hover:border-violet-500/40 hover:text-slate-200"
               }`}
             >
               Cell type
@@ -165,11 +165,11 @@ export default function ControlsPanel({
             <button
               onClick={() => activeGene && onPickGene(activeGene)}
               disabled={!activeGene}
-              className={`flex-1 rounded-md px-2 py-1.5 text-xs transition ${
+              className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition ${
                 colorMode === "gene"
-                  ? "bg-indigo-500/20 text-indigo-200"
+                  ? "bg-brand-gradient text-white shadow-glow-violet"
                   : activeGene
-                  ? "border border-slate-800 text-slate-400 hover:text-slate-200"
+                  ? "border border-slate-800 text-slate-400 hover:border-violet-500/40 hover:text-slate-200"
                   : "border border-slate-800 text-slate-600 cursor-not-allowed"
               }`}
             >
@@ -250,9 +250,9 @@ export default function ControlsPanel({
               step="0.5"
               value={pointSize}
               onChange={(e) => setPointSize(parseFloat(e.target.value))}
-              className="h-1 flex-1 cursor-pointer accent-indigo-500"
+              className="h-1 flex-1 cursor-pointer accent-violet-500"
             />
-            <span className="w-6 text-center font-mono text-xs text-indigo-300">
+            <span className="w-6 text-center font-mono text-xs text-cyan-300">
               {pointSize}
             </span>
           </div>
@@ -280,7 +280,7 @@ export default function ControlsPanel({
 function Section({ title, children }) {
   return (
     <div>
-      <div className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-slate-500">
+      <div className="mb-1.5 font-mono text-[10px] font-medium uppercase tracking-widest text-slate-400">
         {title}
       </div>
       {children}

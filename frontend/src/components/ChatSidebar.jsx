@@ -45,8 +45,8 @@ function MessageBubble({ role, content }) {
       <div
         className={`max-w-[88%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
           isUser
-            ? "bg-indigo-600 text-white"
-            : "border border-slate-800 bg-slate-900 text-slate-200"
+            ? "bg-brand-gradient text-white shadow-glow-violet"
+            : "glass-panel text-slate-200"
         }`}
       >
         {isUser ? (
@@ -62,11 +62,11 @@ function MessageBubble({ role, content }) {
 function TypingIndicator() {
   return (
     <div className="flex justify-start">
-      <div className="flex items-center gap-1.5 rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3">
+      <div className="glass-panel flex items-center gap-1.5 rounded-2xl px-4 py-3">
         {[0, 1, 2].map((i) => (
           <span
             key={i}
-            className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-indigo-400"
+            className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-brand-gradient"
             style={{ animationDelay: `${i * 0.18}s` }}
           />
         ))}
@@ -141,9 +141,9 @@ export default function ChatSidebar({ datasetReady }) {
   return (
     <div className="flex h-full flex-col bg-slate-900/40">
       {/* Header */}
-      <div className="flex items-center gap-2.5 border-b border-slate-800 px-5 py-4">
-        <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px] shadow-emerald-400/60" />
-        <h2 className="font-semibold tracking-tight text-slate-100">
+      <div className="flex items-center gap-2.5 border-b border-violet-950/60 px-5 py-4">
+        <span className="h-2 w-2 animate-glow-pulse rounded-full bg-emerald-400 shadow-[0_0_8px] shadow-emerald-400/60" />
+        <h2 className="bg-brand-gradient bg-clip-text font-bold tracking-tight text-transparent">
           AskCell AI
         </h2>
         <span className="ml-auto font-mono text-[10px] uppercase tracking-widest text-slate-500">
@@ -170,7 +170,7 @@ export default function ChatSidebar({ datasetReady }) {
                   <button
                     key={s}
                     onClick={() => sendMessage(s)}
-                    className="rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-left text-xs text-slate-300 transition hover:border-indigo-500/50 hover:text-indigo-200"
+                    className="rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-left text-xs text-slate-300 transition hover:scale-[1.02] hover:border-violet-500/50 hover:text-violet-200"
                   >
                     {s}
                   </button>
@@ -188,8 +188,8 @@ export default function ChatSidebar({ datasetReady }) {
       </div>
 
       {/* Composer */}
-      <div className="border-t border-slate-800 p-4">
-        <div className="flex items-end gap-2 rounded-xl border border-slate-800 bg-slate-950 p-2 focus-within:border-indigo-500/60">
+      <div className="border-t border-violet-950/60 p-4">
+        <div className="flex items-end gap-2 rounded-xl border border-slate-800 bg-slate-950 p-2 focus-within:border-violet-500/60">
           <textarea
             ref={textareaRef}
             rows={1}
@@ -206,7 +206,7 @@ export default function ChatSidebar({ datasetReady }) {
           <button
             onClick={() => sendMessage(input)}
             disabled={loading || !datasetReady || !input.trim()}
-            className="rounded-lg bg-indigo-600 px-3.5 py-2 text-sm font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-lg bg-brand-gradient px-3.5 py-2 text-sm font-semibold text-white shadow-glow-violet transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
           >
             {loading ? "…" : "Send"}
           </button>

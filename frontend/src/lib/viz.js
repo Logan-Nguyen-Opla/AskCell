@@ -25,13 +25,20 @@ const VIRIDIS = [
 ];
 
 /* ----------------------- Categorical colors ----------------------- */
-// Curated, high-contrast hues for the first several cell types. Beyond this,
-// we fall back to golden-angle hue rotation so an UNLIMITED number of
-// categories stay visually distinct (no looping back onto earlier colors).
+// Accessibility-validated categorical series (fixed order, colorblind-safe on
+// dark surfaces). Used for cell-type/category coloring in the UMAP scatter and
+// as the corresponding legend/violin/dot-plot colors. Beyond this, we fall
+// back to golden-angle hue rotation so an UNLIMITED number of categories stay
+// visually distinct (no looping back onto earlier colors).
 const CATEGORY_BASE = [
-  "#818cf8", "#34d399", "#fbbf24", "#fb7185", "#38bdf8",
-  "#c084fc", "#fb923c", "#2dd4bf", "#f472b6", "#a3e635",
-  "#60a5fa", "#f87171", "#4ade80", "#facc15", "#e879f9",
+  "#3987e5", // 1 blue
+  "#d95926", // 2 orange
+  "#199e70", // 3 aqua
+  "#c98500", // 4 yellow
+  "#d55181", // 5 magenta
+  "#008300", // 6 green
+  "#9085e9", // 7 violet
+  "#e66767", // 8 red
 ];
 const UNKNOWN_RGB = [148, 163, 184]; // slate-400 for cells with no label
 

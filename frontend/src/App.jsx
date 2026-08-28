@@ -429,9 +429,9 @@ export default function App() {
 
           {dragging && (
             <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm">
-              <div className="rounded-2xl border-2 border-dashed border-indigo-400 px-10 py-8 text-center">
+              <div className="glass-panel rounded-2xl border-2 border-dashed border-violet-400/70 px-10 py-8 text-center shadow-glow-violet">
                 <div className="mb-2 text-4xl">⬇</div>
-                <p className="font-medium text-indigo-200">Drop your .h5ad dataset</p>
+                <p className="bg-brand-gradient bg-clip-text font-semibold text-transparent">Drop your .h5ad dataset</p>
               </div>
             </div>
           )}
@@ -450,7 +450,7 @@ export default function App() {
         )}
 
         {datasetReady && (
-          <div className="h-72 shrink-0 border-t border-slate-800 bg-slate-900/30">
+          <div className="h-72 shrink-0 border-t border-violet-950/60 bg-slate-900/30">
             <ExpressionPlots
               genes={genes}
               grouped={grouped}
@@ -464,19 +464,19 @@ export default function App() {
       </div>
 
       {/* ---------------- Right rail: selection + Chat/QC ---------------- */}
-      <div className="flex h-full w-96 shrink-0 flex-col border-l border-slate-800">
+      <div className="flex h-full w-96 shrink-0 flex-col border-l border-violet-950/60">
         {selection && (
           <SelectionCard selection={selection} onClear={() => setSelection(null)} />
         )}
 
-        <div className="flex border-b border-slate-800">
+        <div className="flex border-b border-violet-950/60">
           {["chat", "qc"].map((t) => (
             <button
               key={t}
               onClick={() => setRightTab(t)}
               className={`flex-1 px-3 py-2.5 text-xs font-medium uppercase tracking-wide transition ${
                 rightTab === t
-                  ? "border-b-2 border-indigo-400 text-indigo-200"
+                  ? "border-b-2 border-cyan-400 bg-brand-gradient-soft text-violet-200"
                   : "text-slate-500 hover:text-slate-300"
               }`}
             >
@@ -503,7 +503,7 @@ export default function App() {
 
 function SelectionCard({ selection, onClear }) {
   return (
-    <div className="border-b border-emerald-500/30 bg-emerald-500/5 px-4 py-3">
+    <div className="border-b border-emerald-500/30 bg-emerald-500/10 px-4 py-3 shadow-glow-emerald">
       <div className="flex items-center justify-between">
         <span className="font-mono text-xs text-emerald-200">
           {selection.n.toLocaleString()} cells selected
@@ -556,11 +556,11 @@ function EmptyState({ status, error, uploadPct, uploadPhase, uploadEta }) {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-slate-950">
-      <div className="mb-5 grid grid-cols-6 gap-1.5 opacity-30">
+      <div className="mb-5 grid grid-cols-6 gap-1.5 opacity-40">
         {Array.from({ length: 36 }).map((_, i) => (
           <span
             key={i}
-            className="h-1.5 w-1.5 rounded-full bg-indigo-400"
+            className="h-1.5 w-1.5 rounded-full bg-violet-400"
             style={{ opacity: 0.2 + ((i * 37) % 80) / 100 }}
           />
         ))}
@@ -568,14 +568,14 @@ function EmptyState({ status, error, uploadPct, uploadPhase, uploadEta }) {
 
       {uploading ? (
         <div className="w-80 max-w-[80%] text-center">
-          <h3 className="mb-3 text-lg font-medium text-slate-300">
+          <h3 className="mb-3 text-lg font-medium text-slate-200">
             {uploadPhase === "processing"
               ? "Processing on server…"
               : "Uploading…"}
           </h3>
           <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
             <div
-              className="h-full rounded-full bg-indigo-500 transition-[width] duration-200"
+              className="h-full animate-gradient-shift rounded-full bg-brand-gradient bg-200 transition-[width] duration-200"
               style={{
                 width:
                   uploadPhase === "processing"
@@ -594,7 +594,7 @@ function EmptyState({ status, error, uploadPct, uploadPhase, uploadEta }) {
         </div>
       ) : (
         <>
-          <h3 className="text-lg font-medium text-slate-300">
+          <h3 className="bg-brand-gradient bg-clip-text text-lg font-semibold text-transparent">
             Drop an .h5ad file to begin
           </h3>
           <p className="mt-2 max-w-sm text-center text-sm text-slate-500">
@@ -717,7 +717,7 @@ function UmapAutoBanner({ filename, onComputed }) {
               },
             ].map((step, i) => (
               <div key={i} className="flex gap-2.5">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-[10px] font-bold text-white shadow-glow-violet">
                   {i + 1}
                 </span>
                 <div>
@@ -736,13 +736,13 @@ function UmapAutoBanner({ filename, onComputed }) {
           <div className="flex gap-2">
             <button
               onClick={handleDownload}
-              className="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-indigo-500"
+              className="rounded-md bg-brand-gradient px-3 py-1.5 text-xs font-medium text-white shadow-glow-violet transition hover:scale-105"
             >
               Download script
             </button>
             <button
               onClick={handleCopy}
-              className="rounded-md border border-slate-700 px-3 py-1.5 text-xs text-slate-300 transition hover:bg-slate-800"
+              className="rounded-md border border-slate-700 px-3 py-1.5 text-xs text-slate-300 transition hover:border-violet-500/40 hover:bg-slate-800"
             >
               {copied ? "Copied!" : "Copy script"}
             </button>
@@ -761,7 +761,7 @@ function BigFilePrompt({ file, onConfirm, onCancel }) {
   const estSec = file.size / EST_UPLOAD_BPS;
   return (
     <div className="absolute inset-0 z-30 flex items-center justify-center bg-slate-950/85 backdrop-blur-sm">
-      <div className="w-[26rem] max-w-[88%] rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-xl">
+      <div className="glass-panel w-[26rem] max-w-[88%] rounded-2xl p-6 shadow-glow-violet">
         <h3 className="mb-1 text-base font-semibold text-slate-100">
           Large file — heads up
         </h3>
@@ -791,7 +791,7 @@ function BigFilePrompt({ file, onConfirm, onCancel }) {
           </button>
           <button
             onClick={onConfirm}
-            className="rounded-lg bg-indigo-600 px-3.5 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-500"
+            className="rounded-lg bg-brand-gradient px-3.5 py-1.5 text-sm font-medium text-white shadow-glow-violet transition hover:scale-105"
           >
             Upload full file (~{formatDuration(estSec)})
           </button>

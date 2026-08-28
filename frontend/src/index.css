@@ -27,9 +27,45 @@ body {
   background: transparent;
 }
 .askcell-scroll::-webkit-scrollbar-thumb {
-  background: #1e293b; /* slate-800 */
+  background: #3b3459; /* violet-tinted slate */
   border-radius: 9999px;
 }
 .askcell-scroll::-webkit-scrollbar-thumb:hover {
-  background: #334155; /* slate-700 */
+  background: #574d82;
+}
+
+/*
+ * Glassmorphic panel — the shared "chrome" treatment for cards, rails, and
+ * chat bubbles: soft blur, a faint gradient-tinted border (via the classic
+ * double-background trick, so it still respects whatever border-radius the
+ * element already has), and a low-opacity accent glow.
+ *
+ * Purely a visual/style utility — no effect on layout, data, or behavior.
+ */
+.glass-panel {
+  position: relative;
+  background-color: rgba(15, 15, 28, 0.5);
+  background-image:
+    linear-gradient(180deg, rgba(30, 27, 55, 0.55), rgba(10, 10, 20, 0.35)),
+    linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(34, 211, 238, 0.25));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 30px -16px rgba(99, 102, 241, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* Same trick, tuned for small chips/inline surfaces where a big blur is too heavy. */
+.glass-panel-soft {
+  position: relative;
+  background-color: rgba(15, 15, 28, 0.55);
+  background-image:
+    linear-gradient(180deg, rgba(30, 27, 55, 0.4), rgba(10, 10, 20, 0.25)),
+    linear-gradient(135deg, rgba(139, 92, 246, 0.22), rgba(217, 70, 239, 0.16));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }

@@ -39,7 +39,7 @@ export default function ExpressionPlots({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-2 border-b border-slate-800 px-4 py-2">
+      <div className="flex items-center gap-2 border-b border-violet-950/60 px-4 py-2">
         <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
           plots
         </span>
@@ -48,9 +48,9 @@ export default function ExpressionPlots({
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`rounded-md px-2.5 py-1 text-xs transition ${
+              className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
                 tab === t.key
-                  ? "bg-indigo-500/20 text-indigo-200"
+                  ? "bg-brand-gradient text-white shadow-glow-violet"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >

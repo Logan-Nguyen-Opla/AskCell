@@ -105,7 +105,7 @@ export default function FlowChat({ hasSample, sampleName }) {
           <div className="space-y-3">
             <button
               onClick={() => send(null, { explain: true })}
-              className="w-full rounded-lg bg-indigo-600 px-3 py-2.5 text-xs font-medium text-white transition hover:bg-indigo-500"
+              className="w-full animate-glow-pulse rounded-lg bg-brand-gradient bg-200 bg-[position:0%_50%] px-3 py-2.5 text-xs font-semibold text-white transition-all duration-300 hover:scale-[1.02] hover:bg-[position:100%_50%]"
             >
               Explain this result
             </button>
@@ -117,7 +117,7 @@ export default function FlowChat({ hasSample, sampleName }) {
                 <button
                   key={s}
                   onClick={() => send(s)}
-                  className="block w-full rounded border border-slate-800 px-2.5 py-1.5 text-left text-[11px] text-slate-400 transition hover:border-indigo-500/40 hover:text-slate-200"
+                  className="block w-full rounded border border-slate-800 px-2.5 py-1.5 text-left text-[11px] text-slate-400 transition hover:border-violet-500/40 hover:text-slate-200"
                 >
                   {s}
                 </button>
@@ -128,14 +128,14 @@ export default function FlowChat({ hasSample, sampleName }) {
 
         {turns.map((t, i) =>
           t.role === "user" ? (
-            <div key={i} className="flex justify-end">
-              <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-indigo-600/90 px-3 py-2 text-xs text-white">
+            <div key={i} className="flex animate-fade-up justify-end">
+              <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-brand-gradient px-3 py-2 text-xs text-white shadow-glow-violet">
                 {t.text}
               </div>
             </div>
           ) : (
-            <div key={i} className="space-y-1.5">
-              <div className="rounded-2xl rounded-bl-sm border border-slate-800 bg-slate-900/60 px-3 py-2.5">
+            <div key={i} className="animate-fade-up space-y-1.5">
+              <div className="glass-panel rounded-2xl rounded-bl-sm px-3 py-2.5">
                 <Markdownish text={t.text} />
               </div>
               {t.tools?.length > 0 && (
@@ -182,7 +182,7 @@ export default function FlowChat({ hasSample, sampleName }) {
 
       <form
         onSubmit={onSubmit}
-        className="shrink-0 border-t border-slate-800 p-3"
+        className="shrink-0 border-t border-violet-950/60 p-3"
       >
         <div className="flex gap-2">
           <input
@@ -190,12 +190,12 @@ export default function FlowChat({ hasSample, sampleName }) {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about this result…"
             disabled={busy}
-            className="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-slate-200 placeholder:text-slate-600 focus:border-indigo-500/60 focus:outline-none disabled:opacity-50"
+            className="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-slate-200 placeholder:text-slate-600 focus:border-violet-500/60 focus:outline-none disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={busy || !input.trim()}
-            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-indigo-500 disabled:opacity-40"
+            className="rounded-lg bg-brand-gradient px-3 py-1.5 text-xs font-semibold text-white shadow-glow-violet transition hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
           >
             ask
           </button>
