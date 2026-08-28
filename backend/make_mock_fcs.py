@@ -7,7 +7,7 @@ pipeline, so the app works before any real acquisition is available.
     python make_mock_fcs.py
 
 Writes into ``sample_data/``:
-    normal_bm_01.fcs .. normal_bm_04.fcs   normal marrow -- the reference set
+    normal_bm_01.fcs .. normal_bm_20.fcs   normal marrow -- the reference set
     patient_overt.fcs                      25% aberrant B-lymphoblasts
     patient_mrd.fcs                        0.05% blasts (residual-disease level)
     patient_normal.fcs                     no blasts (specificity control)
@@ -299,8 +299,9 @@ def main() -> None:
     out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample_data")
     os.makedirs(out_dir, exist_ok=True)
 
+    n_normals = 20
     plan = [
-        *[(f"normal_bm_{i:02d}.fcs", 60_000, 0.0) for i in range(1, 5)],
+        *[(f"normal_bm_{i:02d}.fcs", 60_000, 0.0) for i in range(1, n_normals + 1)],
         ("patient_overt.fcs", 60_000, 25.0),
         ("patient_mrd.fcs", 400_000, 0.05),
         ("patient_normal.fcs", 60_000, 0.0),
