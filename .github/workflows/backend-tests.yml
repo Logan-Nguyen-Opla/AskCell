@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: backend/requirements.txt
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt pytest
 
       - name: Generate cytometry fixtures
         run: python make_mock_fcs.py
