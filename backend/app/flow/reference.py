@@ -220,13 +220,12 @@ def fit_reference(
             "calibrated by holding one out, which is impossible with one file"
         )
 
-    gated = samples if already_gated else [gate(s)[0] for s in samples]
-
     mats: list[np.ndarray] = []
     names_ref: list[str] | None = None
     sources: list[str] = []
-    for s in gated:
-        X, names = marker_matrix(s)
+    for s in samples:
+        g = s if already_gated else gate(s)[0]
+        X, names = marker_matrix(g)
         if names_ref is None:
             names_ref = names
         elif names != names_ref:
@@ -235,10 +234,37 @@ def fit_reference(
                 f"cannot mix panels ({names_ref} vs {names})"
             )
         mats.append(X)
-        sources.append(str(s.uns.get("askcell", {}).get("filename", "?")))
+        sources.append(str(g.uns.get("askcell", {}).get("filename", "?")))
 
+    return _fit_from_matrices(
+        mats, names_ref, sources, k=k, cloud_cap=cloud_cap, percentile=percentile
+    )
+
+
+def _fit_from_matrices(
+    mats: list[np.ndarray],
+    names_ref: list[str] | None,
+    sources: list[str],
+    *,
+    k: int,
+    cloud_cap: int,
+    percentile: float,
+) -> NormalReference:
+    """Shared tail of fitting, once every specimen is reduced to a marker matrix."""
     assert names_ref is not None
-    pooled = np.vstack(mats)
+
+    # Every specimen contributes at most its even share of cloud_cap from here
+    # on. Pooling every full specimen and subsampling *afterward* (the
+    # obvious way to write this) means peak memory during fitting scales with
+    # the number of specimens -- fine for 2, not fine for a reference meant to
+    # grow. Capping per-specimen up front bounds the pooled cloud, the final
+    # training cloud, and every leave-one-out comparison set to ~cloud_cap
+    # regardless of how many specimens go in. Only the held-out side of each
+    # leave-one-out fold stays at full resolution (below), since that is the
+    # side whose precision the calibrated threshold actually depends on.
+    per_specimen_cap = max(500, cloud_cap // len(mats))
+    capped = [_subsample(m, per_specimen_cap, seed=42 + j) for j, m in enumerate(mats)]
+    pooled = np.vstack(capped)
 
     # Reference location and spread, so every marker contributes comparably to
     # the distance instead of the widest-ranging one dominating it.
@@ -247,12 +273,13 @@ def fit_reference(
     scale[scale < 1e-6] = 1.0  # a constant channel must not divide by ~0
 
     # ---- leave-one-out calibration ---------------------------------------- #
-    # Score each specimen against the others to see how unusual healthy cells
-    # look as genuinely unseen data.
+    # Score each specimen (at full resolution) against the others (capped) to
+    # see how unusual healthy cells look as genuinely unseen data.
     null_parts: list[np.ndarray] = []
     for i in range(len(mats)):
-        others = np.vstack([m for j, m in enumerate(mats) if j != i])
-        others_z = _subsample((others - center) / scale, cloud_cap, seed=100 + i)
+        others_z = np.vstack(
+            [(capped[j] - center) / scale for j in range(len(mats)) if j != i]
+        )
         held_z = (mats[i] - center) / scale
         tree = cKDTree(others_z)
         kk = min(k, others_z.shape[0])
@@ -289,10 +316,44 @@ def fit_reference(
     )
 
 
-def fit_reference_from_files(paths: list[str], **kwargs) -> NormalReference:
-    """Convenience wrapper: read each FCS path, then fit."""
+def fit_reference_from_files(
+    paths: list[str],
+    *,
+    k: int = DEFAULT_K,
+    cloud_cap: int = DEFAULT_CLOUD_CAP,
+    percentile: float = DEFAULT_PERCENTILE,
+) -> NormalReference:
+    """Read, gate, and reduce each FCS path to a marker matrix one at a time.
+
+    Reading every specimen into memory as a full AnnData before fitting (the
+    obvious way to write this) scales badly: a reference of a couple dozen
+    specimens comfortably exceeds a constrained deploy target's RAM before
+    fitting even starts, because each raw+gated AnnData carries every channel
+    and every compensation/transform intermediate, not just the handful of
+    marker columns the fit actually needs. Processing one file at a time and
+    keeping only the reduced (n_events, n_markers) float32 matrix means peak
+    memory is one specimen's raw data plus every specimen's *reduced* data,
+    not every specimen's raw data at once.
+    """
     from .fcs_ingest import read_fcs
 
-    return fit_reference(
-        [read_fcs(p, filename=os.path.basename(p)) for p in paths], **kwargs
+    mats: list[np.ndarray] = []
+    names_ref: list[str] | None = None
+    sources: list[str] = []
+    for p in paths:
+        s = read_fcs(p, filename=os.path.basename(p))
+        g, _ = gate(s)
+        X, names = marker_matrix(g)
+        if names_ref is None:
+            names_ref = names
+        elif names != names_ref:
+            raise ValueError(
+                "healthy specimens do not share one marker set -- a reference "
+                f"cannot mix panels ({names_ref} vs {names})"
+            )
+        mats.append(X)
+        sources.append(str(g.uns.get("askcell", {}).get("filename", "?")))
+
+    return _fit_from_matrices(
+        mats, names_ref, sources, k=k, cloud_cap=cloud_cap, percentile=percentile
     )

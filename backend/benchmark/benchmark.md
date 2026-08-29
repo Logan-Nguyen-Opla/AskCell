@@ -12,8 +12,8 @@ Synthetic specimens on a 14-colour B-ALL panel, with a known abnormal fraction. 
 | Mean precision, detected cases | 100.0% |
 | Specificity (healthy controls) | 100.0% (4/4) |
 | Reproducible across repeat runs | identical |
-| Throughput | 1.57s per 100k events |
-| Reference build (one-off) | 16.78s |
+| Throughput | 1.55s per 100k events |
+| Reference build (one-off) | 16.69s |
 
 ## Limit of detection by acquisition depth
 
@@ -33,25 +33,25 @@ The practical consequence: **to lower the detectable percentage, acquire more ev
 
 | Kind | Events | True % | Reported % | Sensitivity | Precision | Detected | Seconds |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| dilution | 50,000 | 5.08274 | 5.0806 | 99.96% | 100.0% | yes | 0.74 |
+| dilution | 50,000 | 5.08274 | 5.0806 | 99.96% | 100.0% | yes | 0.75 |
 | dilution | 50,000 | 1.02595 | 1.0238 | 99.79% | 100.0% | yes | 0.67 |
-| dilution | 50,000 | 0.09877 | 0.0816 | 82.61% | 100.0% | yes | 0.67 |
-| dilution | 50,000 | 0.04938 | 0.0 | 0.0% | — | no | 0.66 |
-| dilution | 50,000 | 0.00859 | 0.0 | 0.0% | — | no | 0.66 |
-| dilution | 200,000 | 5.11196 | 5.112 | 100.0% | 100.0% | yes | 4.39 |
-| dilution | 200,000 | 1.02677 | 1.0246 | 99.79% | 100.0% | yes | 2.89 |
-| dilution | 200,000 | 0.10305 | 0.1025 | 99.48% | 100.0% | yes | 2.78 |
-| dilution | 200,000 | 0.05153 | 0.0515 | 100.0% | 100.0% | yes | 2.86 |
-| dilution | 200,000 | 0.01073 | 0.0 | 0.0% | — | no | 2.75 |
-| dilution | 500,000 | 5.10879 | 5.1086 | 100.0% | 100.0% | yes | 17.91 |
-| dilution | 500,000 | 1.02216 | 1.0222 | 100.0% | 100.0% | yes | 7.79 |
-| dilution | 500,000 | 0.10026 | 0.0992 | 98.93% | 100.0% | yes | 7.28 |
-| dilution | 500,000 | 0.04894 | 0.0485 | 99.12% | 100.0% | yes | 7.34 |
-| dilution | 500,000 | 0.00988 | 0.0094 | 95.65% | 100.0% | yes | 7.15 |
-| specificity | 200,000 | 0.0 | 0.0 | — | — | no | 2.78 |
-| specificity | 200,000 | 0.0 | 0.0 | — | — | no | 2.87 |
-| specificity | 200,000 | 0.0 | 0.0 | — | — | no | 2.85 |
-| specificity | 200,000 | 0.0 | 0.0 | — | — | no | 2.83 |
+| dilution | 50,000 | 0.09877 | 0.0816 | 82.61% | 100.0% | yes | 0.66 |
+| dilution | 50,000 | 0.04938 | 0.0 | 0.0% | — | no | 0.69 |
+| dilution | 50,000 | 0.00859 | 0.0 | 0.0% | — | no | 0.69 |
+| dilution | 200,000 | 5.11196 | 5.112 | 100.0% | 100.0% | yes | 4.41 |
+| dilution | 200,000 | 1.02677 | 1.0246 | 99.79% | 100.0% | yes | 2.77 |
+| dilution | 200,000 | 0.10305 | 0.1025 | 99.48% | 100.0% | yes | 2.66 |
+| dilution | 200,000 | 0.05153 | 0.0515 | 100.0% | 100.0% | yes | 2.74 |
+| dilution | 200,000 | 0.01073 | 0.0 | 0.0% | — | no | 2.67 |
+| dilution | 500,000 | 5.10879 | 5.1088 | 100.0% | 100.0% | yes | 18.36 |
+| dilution | 500,000 | 1.02216 | 1.0222 | 100.0% | 100.0% | yes | 7.52 |
+| dilution | 500,000 | 0.10026 | 0.0992 | 98.93% | 100.0% | yes | 7.19 |
+| dilution | 500,000 | 0.04894 | 0.0485 | 99.12% | 100.0% | yes | 7.01 |
+| dilution | 500,000 | 0.00988 | 0.0094 | 95.65% | 100.0% | yes | 6.88 |
+| specificity | 200,000 | 0.0 | 0.0 | — | — | no | 2.72 |
+| specificity | 200,000 | 0.0 | 0.0 | — | — | no | 2.71 |
+| specificity | 200,000 | 0.0 | 0.0 | — | — | no | 2.76 |
+| specificity | 200,000 | 0.0 | 0.0 | — | — | no | 2.8 |
 
 ## Caveats
 
