@@ -4,12 +4,12 @@ flow_engine.py
 Session state for the cytometry workflow: holds the healthy reference and one
 patient specimen *at the same time*, and serves the results to the front-end.
 
-Why this exists alongside cell_engine
--------------------------------------
-``cell_engine.py`` holds exactly one dataset, which is fine for browsing a
-single scRNA-seq file but makes a comparison impossible by construction -- you
-cannot diff a patient against a reference if only one of them can be in memory.
-This module holds both, plus the detection report and a shared 2-D embedding.
+Why this holds both at once
+----------------------------
+A single-dataset session would make a comparison impossible by construction --
+you cannot diff a patient against a reference if only one of them can be in
+memory. This module holds both, plus the detection report and a shared 2-D
+embedding.
 
 The embedding is deliberately fitted on the *reference*, not on the patient.
 Both are then projected through the same axes, so a patient's cells land where

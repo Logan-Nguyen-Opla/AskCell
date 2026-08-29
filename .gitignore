@@ -20,7 +20,6 @@ dist/
 
 # Datasets — ignore uploads, but KEEP the bundled sample
 *.h5ad
-!backend/sample_data/mock_pbmc.h5ad
 
 # Cytometry fixtures — ~52 MB, and make_mock_fcs.py regenerates them
 # deterministically (seed 42), so they are built rather than committed:

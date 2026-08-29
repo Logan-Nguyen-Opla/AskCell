@@ -9,6 +9,5 @@ __pycache__/
 # Never ship the local secrets file.
 .env
 
-# Exclude any uploaded datasets, but KEEP the bundled sample.
+# Exclude any uploaded datasets.
 *.h5ad
-!sample_data/mock_pbmc.h5ad

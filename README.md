@@ -1,17 +1,10 @@
 # 🧬 AskCell
 
-Two analysis surfaces over one backend, switchable from the button at the bottom
-of the screen:
+AskCell finds abnormal cell populations in a flow or mass cytometry specimen by
+comparing it against a reference built from healthy specimens.
 
-1. **Cytometry** *(default)* — finds abnormal cell populations in a flow or mass
-   cytometry specimen by comparing it against a reference built from healthy
-   specimens. This is the workflow the project is built around.
-2. **scRNA-seq** — the original single-cell gene-expression browser: a WebGL
-   scatterplot with gene colouring, gating, dot plots and a Claude chat agent.
-
-> **Comes with built-in data on both sides.** The backend fits a healthy
-> cytometry reference and loads a sample scRNA-seq dataset on startup, so both
-> screens work the moment you open the app.
+> **Comes with built-in data.** The backend fits a healthy cytometry reference
+> on startup, so the screen works the moment you open the app.
 
 ---
 
@@ -144,15 +137,6 @@ says is used for an entity, framed as background.
 
 ---
 
-## 🔬 scRNA-seq browser
-
-An interactive **Single-Cell RNA-seq** analytics platform. Visualize massive
-biomedical datasets in real time with hardware-accelerated WebGL (Deck.gl), and
-query biological insights in natural language via a **Claude** agent with tool
-use.
-
----
-
 ## ⚡ Quick start (Windows)
 
 You need two free things installed first:
@@ -174,8 +158,7 @@ That's it. The cytometry screen opens with a healthy reference already built.
 Pick a specimen from `backend/sample_data/` — start with `patient_overt.fcs`,
 then try `patient_normal.fcs` and `patient_mrd.fcs`.
 
-Pan by dragging, zoom with the scroll wheel, hover a cell for its details. The
-button at the bottom switches to the scRNA-seq browser.
+Pan by dragging, zoom with the scroll wheel, hover a cell for its details.
 
 > **First run only:** if `sample_data/` has no `.fcs` files, generate them with
 > `cd backend && python make_mock_fcs.py`.
@@ -230,9 +213,7 @@ AskCell/
 │   │   │   ├── detect.py          two-stage detection
 │   │   │   └── interpret.py       candidate entities + evidence
 │   │   ├── flow_engine.py     holds reference + specimen, shared embedding
-│   │   ├── flow_agent.py      Claude agent over the finished report
-│   │   ├── cell_engine.py     scRNA-seq engine (single dataset)
-│   │   └── ai_agent.py        scRNA-seq gene-expression agent
+│   │   └── flow_agent.py      Claude agent over the finished report
 │   ├── make_mock_fcs.py       generates the cytometry fixtures
 │   ├── run_detection.py       CLI: whole pipeline, printed report
 │   ├── benchmark.py           validation sweep -> benchmark/
@@ -240,21 +221,18 @@ AskCell/
 │   └── sample_data/
 └── frontend/                            # React (Vite)
     └── src/
-        ├── Root.jsx           mode switch between the two surfaces
+        ├── main.jsx           mounts the cytometry screen
         ├── FlowApp.jsx        the cytometry screen
-        ├── App.jsx            the scRNA-seq browser
         └── components/
+            ├── ControlsPanel.jsx  upload / reference controls
             ├── FlowViewer.jsx     healthy cloud + specimen, abnormal in red
             ├── FlowReport.jsx     verdict, stages, phenotype, differential
-            ├── FlowChat.jsx       plain-language explanation + follow-ups
-            └── UmapViewer.jsx     scRNA-seq scatterplot
+            └── FlowChat.jsx       plain-language explanation + follow-ups
 ```
 
 ---
 
 ## How it works
-
-**Cytometry:**
 
 ```
 [open app] → reference fitted from healthy .fcs (cached) → grey cloud renders
@@ -267,53 +245,15 @@ AskCell/
                               → answer, with the tools it consulted shown
 ```
 
-**scRNA-seq:**
-
-```
-[switch mode] → mock_pbmc.h5ad auto-loaded → Deck.gl renders @ 60 FPS
-                              │
-[Chat: "Check expression of CD3D"] → Claude calls get_gene_expression
-        → real mean/max metrics from the matrix → synthesized answer
-```
-
-The cytometry fixtures are 60k–400k events on a 14-colour B-ALL panel; the
-scRNA-seq mock has 3,000 immune cells in 5 clusters with real marker genes
-(CD3D, MS4A1, NKG7, LYZ, PDCD1, GAPDH, …), so both agents answer from real
-numbers.
-
----
-
-## Using your own data
-
-Drag any `.h5ad` file onto the left pane to replace the sample. The only
-requirement: it must already contain 2D UMAP coordinates in
-`adata.obsm['X_umap']` (the dot positions on the map). Standard processed
-datasets like `pbmc3k` have this. A raw count matrix does not — run it through
-the standard UMAP step first (e.g. in scanpy on Python 3.12 or Google Colab).
-
-### Large files
-
-Uploads are bottlenecked by your **internet upload speed** — a 2 GB file can
-take ~20 minutes to send before parsing even starts. The viewer only displays
-up to 150k cells, so for huge datasets it's far faster to **downsample first**:
-
-```bash
-cd backend
-.venv/Scripts/python downsample_h5ad.py /path/to/big.h5ad
-# -> writes big.subsampled.h5ad (100k cells) — upload that instead
-```
-
-Pass a custom output name / cell count: `python downsample_h5ad.py big.h5ad out.h5ad 150000`.
-The app also warns you before a large upload and shows a live progress bar + ETA.
+The cytometry fixtures are 60k–400k events on a 14-colour B-ALL panel, so the
+agent answers from real numbers.
 
 ---
 
 ## API reference
 
-### Cytometry
-
 | Method | Endpoint                      | Body                          | Returns                                        |
-| ------ | ----------------------------- | ----------------------------- | ---------------------------------------------- |
+| ------ | ----------------------------- | ------------------------------ | ---------------------------------------------- |
 | GET    | `/api/flow/status`            | —                             | `{ reference_loaded, sample_loaded, ... }`     |
 | POST   | `/api/flow/reference`         | `multipart` 2+ `.fcs` files   | `{ message, reference }`                       |
 | POST   | `/api/flow/sample`            | `multipart` one `.fcs` file   | full detection report                          |
@@ -328,25 +268,14 @@ In `/api/flow/scatter`, `s` is the cell's distance from normal and `p` is the
 population it belongs to (`-1` for none). Abnormal cells are never thinned by the
 display subsample — a 189-cell population would otherwise vanish.
 
-### scRNA-seq
-
-| Method | Endpoint       | Body                       | Returns                                   |
-| ------ | -------------- | -------------------------- | ----------------------------------------- |
-| POST   | `/api/upload`  | `multipart` `.h5ad` file   | `{ message, filename }`                   |
-| GET    | `/api/umap`    | —                          | `{ total_cells, cells: [{id,x,y}] }`      |
-| POST   | `/api/chat`    | `{ "message": "..." }`     | `{ reply }`                               |
-| GET    | `/api/status`  | —                          | `{ loaded, filename, n_cells, n_genes }`  |
-
 ---
 
 ## Notes & guardrails
 
-- **Zero-config demo**: the bundled sample auto-loads on startup; disable by
-  setting `SAMPLE_H5AD=` (empty) in `backend/.env`.
-- **In-memory lifecycle**: the dataset lives in a process-global singleton;
-  chat queries never re-read from disk.
+- **In-memory lifecycle**: the reference and specimen live in a process-global
+  singleton; chat queries never re-read from disk.
 - **JSON serialization**: all NumPy scalars are cast to Python `float`/`int`
   before leaving the backend, preventing FastAPI encoder crashes.
 - **No fabrication**: the agent is instructed never to guess metrics — every
-  number comes from the real matrix via the tool.
+  number comes from the real report via the tool.
 - **Python 3.13 friendly**: no package here needs a C compiler.

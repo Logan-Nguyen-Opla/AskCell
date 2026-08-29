@@ -1,35 +1,18 @@
 /**
  * viz.js
  * ------
- * Small dependency-free helpers shared by the visualization components:
- *   - viridis continuous color ramp (for gene-expression coloring + heatmap)
- *   - histogram binning (QC panel + violin density)
- *   - geometry (point-in-rect for box selection)
+ * Small dependency-free color helper shared by the visualization components:
+ *   - categorical color palette (population coloring in FlowViewer/ControlsPanel)
  *
  * Kept tiny and pure so it tree-shakes well and is trivial to test.
  */
 
-// 10-stop viridis approximation. Perceptually uniform, colorblind-friendly,
-// and reads well on the dark slate background.
-const VIRIDIS = [
-  [68, 1, 84],
-  [72, 40, 120],
-  [62, 74, 137],
-  [49, 104, 142],
-  [38, 130, 142],
-  [31, 158, 137],
-  [53, 183, 121],
-  [110, 206, 88],
-  [181, 222, 43],
-  [253, 231, 37],
-];
-
 /* ----------------------- Categorical colors ----------------------- */
 // Accessibility-validated categorical series (fixed order, colorblind-safe on
-// dark surfaces). Used for cell-type/category coloring in the UMAP scatter and
-// as the corresponding legend/violin/dot-plot colors. Beyond this, we fall
-// back to golden-angle hue rotation so an UNLIMITED number of categories stay
-// visually distinct (no looping back onto earlier colors).
+// dark surfaces). Used for population coloring in the cytometry scatter and
+// its legend. Beyond this, we fall back to golden-angle hue rotation so an
+// UNLIMITED number of categories stay visually distinct (no looping back onto
+// earlier colors).
 const CATEGORY_BASE = [
   "#3987e5", // 1 blue
   "#d95926", // 2 orange
@@ -78,74 +61,4 @@ export function categoryHex(i) {
   const [r, g, b] = categoryRgb(i);
   const h = (v) => v.toString(16).padStart(2, "0");
   return `#${h(r)}${h(g)}${h(b)}`;
-}
-
-/** Map t in [0,1] to an [r,g,b] viridis color (clamped). */
-export function viridisRgb(t) {
-  if (!Number.isFinite(t)) return [120, 120, 120];
-  const x = Math.max(0, Math.min(1, t));
-  const scaled = x * (VIRIDIS.length - 1);
-  const i = Math.floor(scaled);
-  const f = scaled - i;
-  const a = VIRIDIS[i];
-  const b = VIRIDIS[Math.min(i + 1, VIRIDIS.length - 1)];
-  return [
-    Math.round(a[0] + (b[0] - a[0]) * f),
-    Math.round(a[1] + (b[1] - a[1]) * f),
-    Math.round(a[2] + (b[2] - a[2]) * f),
-  ];
-}
-
-export function viridisHex(t) {
-  const [r, g, b] = viridisRgb(t);
-  const h = (v) => v.toString(16).padStart(2, "0");
-  return `#${h(r)}${h(g)}${h(b)}`;
-}
-
-/** Normalize a value into [0,1] given a [min,max] range (safe on zero-range). */
-export function norm(v, min, max) {
-  if (max <= min) return 0;
-  return (v - min) / (max - min);
-}
-
-/** Bin values into `bins` equal-width buckets over [min,max]. Returns counts. */
-export function histogram(values, bins, min, max) {
-  const counts = new Array(bins).fill(0);
-  if (max <= min) {
-    counts[0] = values.length;
-    return counts;
-  }
-  const span = max - min;
-  for (let k = 0; k < values.length; k++) {
-    const v = values[k];
-    if (!Number.isFinite(v)) continue;
-    let idx = Math.floor(((v - min) / span) * bins);
-    if (idx < 0) idx = 0;
-    if (idx >= bins) idx = bins - 1;
-    counts[idx] += 1;
-  }
-  return counts;
-}
-
-/** min/max of a numeric array, ignoring non-finite values. */
-export function extent(values) {
-  let min = Infinity;
-  let max = -Infinity;
-  for (let k = 0; k < values.length; k++) {
-    const v = values[k];
-    if (!Number.isFinite(v)) continue;
-    if (v < min) min = v;
-    if (v > max) max = v;
-  }
-  if (min === Infinity) return [0, 0];
-  return [min, max];
-}
-
-/** True if point (px,py) lies in the rectangle defined by two corners. */
-export function pointInRect(px, py, x0, y0, x1, y1) {
-  const minX = Math.min(x0, x1);
-  const maxX = Math.max(x0, x1);
-  const minY = Math.min(y0, y1);
-  const maxY = Math.max(y0, y1);
-  return px >= minX && px <= maxX && py >= minY && py <= maxY;
 }
