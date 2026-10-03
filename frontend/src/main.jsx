@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import FlowApp from "./FlowApp.jsx";
+import Shell from "./Shell.jsx";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <FlowApp />
+    <Shell />
   </React.StrictMode>
 );
