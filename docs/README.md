@@ -20,3 +20,14 @@ chrome --headless --disable-gpu --no-pdf-header-footer \
 On Windows, `chrome` is usually
 `"C:/Program Files/Google/Chrome/Application/chrome.exe"`, and `msedge.exe`
 works identically.
+
+---
+
+**`AskCell-Bao-Cao-Nghien-Cuu.html`** — the formal Vietnamese-language research
+report (báo cáo nghiên cứu) for a school science-fair submission, following the
+competition's required format (A4, 3/2/2/2 cm margins, Times New Roman 14,
+single spacing, cover page + mục lục + 5 chapters + references). Regenerate the
+PDF the same way as the method brief above, substituting the filename. The
+mục lục's page numbers are hand-estimated and should be checked against the
+actual PDF pagination before submission; the reference list (6 sources) was
+verified against real published papers, not generated from memory alone.

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>AskCell — Báo cáo nghiên cứu</title>
+<style>
+  @page { size: A4; margin: 2cm 2cm 2cm 3cm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 14pt;
+    line-height: 1.2;
+    color: #000;
+    margin: 0;
+    padding: 0;
+  }
+  .page { padding: 0; }
+  .page-break { page-break-before: always; break-before: page; }
+  h1, h2, h3 { font-family: "Times New Roman", Times, serif; font-weight: bold; }
+  h1 { font-size: 16pt; text-align: center; margin: 0 0 14pt 0; }
+  h2 { font-size: 15pt; margin: 18pt 0 8pt 0; }
+  h3 { font-size: 14pt; margin: 12pt 0 6pt 0; }
+  p { margin: 0 0 8pt 0; text-align: justify; }
+  .center { text-align: center; }
+  .cover { text-align: center; }
+  .cover .school { font-weight: bold; font-size: 14pt; line-height: 1.3; margin-bottom: 40pt; }
+  .cover .contest { font-weight: bold; font-size: 14pt; margin-bottom: 60pt; }
+  .cover .label { font-weight: bold; font-size: 14pt; margin-bottom: 8pt; }
+  .cover .title { font-weight: bold; font-size: 20pt; line-height: 1.35; margin: 10pt 0 60pt 0; }
+  .cover table { margin: 0 auto 60pt auto; text-align: left; border-collapse: collapse; }
+  .cover table td { padding: 3pt 6pt; font-size: 14pt; }
+  .cover .place { font-weight: bold; font-size: 14pt; margin-top: 40pt; }
+  table { border-collapse: collapse; width: 100%; margin: 8pt 0 12pt 0; }
+  table.data th, table.data td {
+    border: 1px solid #000; padding: 4pt 6pt; font-size: 13pt; text-align: center;
+  }
+  table.data th { font-weight: bold; background: #f0f0f0; }
+  .toc-row { display: flex; justify-content: space-between; margin-bottom: 4pt; }
+  .toc-row.indent { padding-left: 24pt; }
+  .toc-row .dots { flex: 1; border-bottom: 1px dotted #000; margin: 0 4pt 3pt 4pt; }
+  .fig { text-align: center; margin: 10pt 0; }
+  .fig-cap { font-size: 12pt; font-style: italic; text-align: center; margin-top: 4pt; }
+  .pipeline {
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+    gap: 4pt; font-size: 11pt; margin: 8pt 0;
+  }
+  .pipeline .box {
+    border: 1px solid #000; padding: 5pt 7pt; border-radius: 4pt; background: #fafafa;
+    text-align: center; min-width: 70pt;
+  }
+  .pipeline .arrow { font-size: 13pt; }
+  ul, ol { margin: 4pt 0 8pt 0; padding-left: 22pt; }
+  li { margin-bottom: 3pt; text-align: justify; }
+  .ref-list { padding-left: 0; list-style: none; }
+  .ref-list li { margin-bottom: 8pt; text-indent: -18pt; padding-left: 18pt; }
+  .note { font-size: 12pt; font-style: italic; }
+  code { font-family: "Courier New", monospace; font-size: 12.5pt; }
+</style>
+</head>
+<body>
+
+<!-- ============================== TRANG BÌA ============================== -->
+<div class="page cover">
+  <div class="school">
+    TRƯỜNG THPT CHUYÊN TRẦN ĐẠI NGHĨA<br>
+    BỘ PHẬN PHỤ TRÁCH<br>
+    NGHIÊN CỨU KHOA HỌC – GIÁO DỤC STEM – KHỞI NGHIỆP
+  </div>
+  <div class="contest">
+    CUỘC THI "HỌC SINH NGHIÊN CỨU KHOA HỌC<br>NĂM HỌC 2026 – 2027"
+  </div>
+  <div class="label">BÁO CÁO NGHIÊN CỨU</div>
+  <div class="title">
+    AskCell — Hệ thống phát hiện quần thể tế bào<br>
+    bất thường trong xét nghiệm tế bào dòng chảy<br>
+    bằng học máy kết hợp trí tuệ nhân tạo
+  </div>
+  <table>
+    <tr><td>Học sinh:</td><td>Nguyễn Long</td><td>Lớp: 9A14</td></tr>
+    <tr><td>Học sinh:</td><td>Nguyễn Nam Long</td><td>Lớp: 9A8</td></tr>
+    <tr><td>Họ và tên GVHD:</td><td colspan="2">Đào Thị Thảo Sương</td></tr>
+    <tr><td>Lĩnh vực:</td><td colspan="2">Y Sinh và Khoa học Sức khỏe</td></tr>
+  </table>
+  <div class="place">Thành phố Hồ Chí Minh, tháng 9 năm 2026</div>
+</div>
+
+<!-- ============================== MỤC LỤC ============================== -->
+<div class="page page-break">
+  <h1>MỤC LỤC</h1>
+  <div class="toc-row"><b>TÓM TẮT DỰ ÁN</b><span class="dots"></span><b>1</b></div>
+  <div class="toc-row"><b>NỘI DUNG</b><span class="dots"></span><b>2</b></div>
+  <div class="toc-row"><b>Chương 1: Lý do chọn đề tài</b><span class="dots"></span><b>2</b></div>
+  <div class="toc-row indent"><span>1.1 Sự cần thiết nghiên cứu</span><span class="dots"></span><span>2</span></div>
+  <div class="toc-row indent"><span>1.2 Căn cứ khoa học vấn đề</span><span class="dots"></span><span>2</span></div>
+  <div class="toc-row"><b>Chương 2: Đặt vấn đề nghiên cứu</b><span class="dots"></span><b>3</b></div>
+  <div class="toc-row indent"><span>2.1 Vấn đề nghiên cứu</span><span class="dots"></span><span>3</span></div>
+  <div class="toc-row indent"><span>2.2 Câu hỏi nghiên cứu</span><span class="dots"></span><span>3</span></div>
+  <div class="toc-row indent"><span>2.3 Các giả thuyết khoa học cần được kiểm định</span><span class="dots"></span><span>3</span></div>
+  <div class="toc-row indent"><span>2.4 Mục tiêu của nghiên cứu</span><span class="dots"></span><span>4</span></div>
+  <div class="toc-row"><b>Chương 3: Thiết kế và phương pháp nghiên cứu</b><span class="dots"></span><b>4</b></div>
+  <div class="toc-row indent"><span>3.1 Phương pháp nghiên cứu</span><span class="dots"></span><span>4</span></div>
+  <div class="toc-row indent"><span>3.2 Thiết kế nghiên cứu</span><span class="dots"></span><span>5</span></div>
+  <div class="toc-row"><b>Chương 4: Tiến hành nghiên cứu</b><span class="dots"></span><b>7</b></div>
+  <div class="toc-row indent"><span>4.1 Tìm hiểu các công trình nghiên cứu liên quan</span><span class="dots"></span><span>7</span></div>
+  <div class="toc-row indent"><span>4.2 Xác định bối cảnh hiện tại và mục tiêu cần nghiên cứu</span><span class="dots"></span><span>7</span></div>
+  <div class="toc-row indent"><span>4.3 Đối tượng nghiên cứu và phạm vi dữ liệu</span><span class="dots"></span><span>8</span></div>
+  <div class="toc-row indent"><span>4.4 Thu thập và tạo bộ dữ liệu</span><span class="dots"></span><span>8</span></div>
+  <div class="toc-row indent"><span>4.5 Tiền xử lý dữ liệu</span><span class="dots"></span><span>9</span></div>
+  <div class="toc-row indent"><span>4.6 Chuẩn bị mô hình và công cụ nghiên cứu</span><span class="dots"></span><span>10</span></div>
+  <div class="toc-row indent"><span>4.7 Hiệu chuẩn mô hình</span><span class="dots"></span><span>10</span></div>
+  <div class="toc-row indent"><span>4.8 Đánh giá mô hình và kết quả</span><span class="dots"></span><span>11</span></div>
+  <div class="toc-row indent"><span>4.9 Xây dựng hệ thống ứng dụng</span><span class="dots"></span><span>12</span></div>
+  <div class="toc-row"><b>Chương 5: Kết luận khoa học</b><span class="dots"></span><b>13</b></div>
+  <div class="toc-row indent"><span>5.1 Kết luận chung</span><span class="dots"></span><span>13</span></div>
+  <div class="toc-row indent"><span>5.2 Những hạn chế</span><span class="dots"></span><span>13</span></div>
+  <div class="toc-row indent"><span>5.3 Hướng phát triển</span><span class="dots"></span><span>13</span></div>
+  <div class="toc-row"><b>NGUỒN THAM KHẢO</b><span class="dots"></span><b>14</b></div>
+  <p class="note">Số trang trong mục lục là ước lượng dựa trên cấu trúc bản thảo; cần rà soát và chỉnh lại sau khi xuất file PDF cuối cùng.</p>
+</div>
+
+<!-- ============================== TÓM TẮT DỰ ÁN ============================== -->
+<div class="page page-break">
+  <h1>TÓM TẮT DỰ ÁN</h1>
+
+  <h3>1. Tính mới</h3>
+  <p>
+  Phần lớn công cụ phân tích tế bào dòng chảy (flow cytometry) hiện nay hoặc dựa vào việc
+  gate thủ công bởi chuyên gia, hoặc dùng một ngưỡng đơn lẻ trên một dấu ấn (marker) để
+  gắn nhãn "bất thường". Cả hai cách đều thất bại trước một hiện tượng gọi là
+  <i>hematogones</i> — tiền thân tế bào B bình thường có kiểu hình gần giống hệt tế bào
+  ung thư non (lymphoblast) trong bạch cầu cấp dòng lympho B (B-ALL), khiến các quy tắc
+  đơn giản báo động nhầm trên chính những mẫu tủy xương khỏe mạnh. Đề tài đề xuất một
+  quy trình phát hiện <b>hai giai đoạn</b>: giai đoạn 1 đánh dấu từng tế bào dựa trên
+  khoảng cách tới k tế bào khỏe mạnh gần nhất trong không gian dấu ấn (không phải một
+  ngưỡng đoán mò, mà một ngưỡng được <i>đo</i> bằng phương pháp hiệu chuẩn "loại-trừ-một"
+  — leave-one-out); giai đoạn 2 phân biệt một dòng tế bào ung thư thật (tạo thành một
+  cụm chặt, đồng nhất trong không gian dấu ấn) khỏi các đốm nhiễu rải rác hoặc hematogones
+  (trải dài mượt theo một trục trưởng thành) bằng phân cụm dựa trên mật độ. Toàn bộ kết
+  quả sau đó được một tác nhân AI (dựa trên Claude) diễn giải bằng ngôn ngữ tự nhiên,
+  nhưng bị ràng buộc kiến trúc để không bao giờ tự bịa một con số — mọi số liệu AI nói ra
+  đều phải truy xuất được từ một lệnh gọi công cụ (tool call) tính toán thật.
+  </p>
+
+  <h3>2. Tính khoa học</h3>
+  <p>
+  Đề tài dựa trên nền tảng khoa học của miễn dịch học tế bào dòng chảy (bù trừ quang phổ,
+  phép biến đổi arcsinh để nén phổ cường độ huỳnh quang) và hai kỹ thuật thống kê/học máy
+  đã được kiểm chứng rộng rãi: phát hiện điểm bất thường dựa trên khoảng cách tới láng
+  giềng gần nhất (k-nearest-neighbour distance) và phân cụm dựa trên mật độ (density-based
+  clustering, cùng họ với DBSCAN). Toàn bộ hiệu năng được đo đạc định lượng — không chỉ mô
+  tả — thông qua một bộ kiểm định gồm chuỗi pha loãng ở nhiều độ sâu thu nhận, nhóm chứng
+  khỏe mạnh, kiểm tra khả năng lặp lại và thông lượng xử lý.
+  </p>
+
+  <h3>3. Tính thực tiễn</h3>
+  <p>
+  Việc gate thủ công một mẫu tế bào dòng chảy bởi chuyên gia huyết học thường mất
+  30–60 phút và có thể cho kết quả khác nhau giữa hai người đọc. Hệ thống được đo đạc xử
+  lý khoảng 1,5 giây cho mỗi 100.000 sự kiện và cho <b>kết quả giống hệt nhau tuyệt đối</b>
+  qua các lần chạy lặp lại trên cùng một mẫu — hai tính chất trực tiếp giải quyết điểm
+  nghẽn về tốc độ và độ nhất quán trong quy trình theo dõi bệnh tồn dư tối thiểu
+  (minimal residual disease – MRD) sau điều trị.
+  </p>
+
+  <h3>4. Tính cộng đồng</h3>
+  <p>
+  Sản phẩm không nhằm thay thế bác sĩ giải phẫu bệnh hay đưa ra chẩn đoán — báo cáo luôn
+  trình bày dưới dạng "quần thể này giống với các bệnh lý nào, cùng bằng chứng ủng hộ/phản
+  bác", chứ không bao giờ khẳng định một bệnh cụ thể. Hướng đóng góp thực tế là hỗ trợ năng
+  lực sàng lọc ban đầu cho các phòng xét nghiệm huyết học, đặc biệt ở nơi thiếu chuyên gia
+  đọc mẫu tế bào dòng chảy giàu kinh nghiệm, đồng thời là một mô hình giáo dục cụ thể cho
+  việc áp dụng AI có trách nhiệm (không bịa số liệu) vào lĩnh vực y sinh.
+  </p>
+</div>
+
+<!-- ============================== NỘI DUNG ============================== -->
+<div class="page page-break">
+<h1>NỘI DUNG</h1>
+
+<h2>Chương 1: Lý do chọn đề tài</h2>
+
+<h3>1.1 Sự cần thiết nghiên cứu</h3>
+<p>
+Xét nghiệm tế bào dòng chảy (flow cytometry) đo đồng thời hàng chục dấu ấn bề mặt trên
+hàng trăm nghìn đến hàng triệu tế bào của một mẫu máu hoặc tủy xương, và là công cụ trung
+tâm để phát hiện bạch cầu cấp cũng như theo dõi bệnh tồn dư tối thiểu (MRD) sau điều trị.
+Việc đọc kết quả hiện vẫn chủ yếu dựa vào chuyên gia "gate" thủ công từng quần thể tế bào
+trên biểu đồ hai chiều — một quá trình chậm (30–60 phút/mẫu), tốn nhân lực chuyên sâu, và
+có thể cho kết quả khác nhau giữa hai người đọc trên cùng một mẫu. Khi số lượng mẫu cần
+theo dõi định kỳ tăng lên (ví dụ theo dõi MRD nhiều đợt trong quá trình điều trị), điểm
+nghẽn về tốc độ và tính nhất quán càng trở nên rõ rệt.
+</p>
+
+<h3>1.2 Căn cứ khoa học vấn đề</h3>
+<p>
+Khó khăn cốt lõi không nằm ở việc "có tế bào lạ" — trên bất kỳ mẫu tủy xương khỏe mạnh
+nào cũng luôn có một số tế bào nằm ở rìa phân bố bình thường. Khó khăn nằm ở việc phân
+biệt một <b>dòng tế bào ung thư thật</b> (một tế bào ngừng trưởng thành và tự nhân bản,
+nên các tế bào con gần như giống hệt nhau — tạo thành một cụm chặt trong không gian dấu
+ấn) khỏi <b>hematogones</b> — tiền thân tế bào B bình thường, dương tính CD19/CD10, âm
+tính/mờ CD45, gần giống kiểu hình lymphoblast đến mức một luật đơn-dấu-ấn sẽ báo động
+nhầm trên hầu hết trẻ em khỏe mạnh <span class="note">[1]</span>. Tài liệu miễn dịch học
+tế bào dòng chảy đã ghi nhận rằng thứ phân biệt hai nhóm này không phải một dấu ấn đơn lẻ,
+mà là <i>cấu trúc hình học</i>: hematogones trải dài mượt theo một trục trưởng thành liên
+tục (CD10 giảm dần, CD20 và CD45 tăng dần cùng lúc), còn dòng ung thư đông cứng tại một
+điểm với các dấu ấn bất thường đồng loạt <span class="note">[1]</span>. Đây chính là căn
+cứ khoa học để đề tài chọn cách tiếp cận hai giai đoạn "đánh dấu rồi phân cụm" thay vì một
+ngưỡng đơn dấu ấn.
+</p>
+
+<h2>Chương 2: Đặt vấn đề nghiên cứu</h2>
+
+<h3>2.1 Vấn đề nghiên cứu</h3>
+<p>
+Cần một phương pháp tính toán có thể, từ một mẫu tế bào dòng chảy của bệnh nhân và một
+tập tham chiếu tế bào khỏe mạnh, tự động: (a) định lượng mức độ "khác thường" của từng tế
+bào; (b) phân biệt được một quần thể ung thư thật khỏi nhiễu thống kê và khỏi hematogones;
+và (c) báo cáo kết quả kèm bằng chứng, thay vì một nhãn chẩn đoán không có cơ sở.
+</p>
+
+<h3>2.2 Câu hỏi nghiên cứu</h3>
+<ul>
+<li>Một ngưỡng bất thường được <i>đo</i> bằng hiệu chuẩn loại-trừ-một trên chính dữ liệu
+tham chiếu có ổn định hơn một ngưỡng chọn theo kinh nghiệm hay không?</li>
+<li>Bước phân cụm dựa trên mật độ có thực sự tách được dòng ung thư thật khỏi hematogones
+và khỏi nhiễu rải rác, ở các mức độ hiếm gặp gần với ngưỡng MRD lâm sàng (dưới 0,1%)
+hay không?</li>
+<li>Giới hạn phát hiện của hệ thống phụ thuộc vào tỉ lệ phần trăm quần thể bất thường, hay
+phụ thuộc vào số lượng sự kiện thu nhận được?</li>
+</ul>
+
+<h3>2.3 Các giả thuyết khoa học cần được kiểm định</h3>
+<ul>
+<li>Ngưỡng đánh dấu được hiệu chuẩn bằng leave-one-out cho phép kiểm soát chủ động tỉ lệ
+báo động nhầm (ví dụ cố định ở mức 0,1% số tế bào khỏe mạnh), thay vì tỉ lệ này là một ẩn
+số.</li>
+<li>Bước phân cụm giữ được độ đặc hiệu cao (không báo động nhầm) ngay cả khi mẫu chứa
+hematogones, đồng thời vẫn giữ được độ nhạy cao trên các quần thể ung thư thật kích thước
+nhỏ.</li>
+<li>Giới hạn phát hiện thực chất là một <i>số lượng tế bào</i> gần như cố định (không phải
+một tỉ lệ phần trăm cố định), nên tăng số sự kiện thu nhận sẽ hạ được tỉ lệ phần trăm nhỏ
+nhất có thể phát hiện.</li>
+</ul>
+
+<h3>2.4 Mục tiêu của nghiên cứu</h3>
+<p><b>2.4.1 Mục tiêu chung:</b> Xây dựng và đánh giá định lượng một quy trình hai giai
+đoạn phát hiện quần thể tế bào bất thường trên dữ liệu tế bào dòng chảy, kết hợp với một
+tác nhân AI diễn giải kết quả bằng ngôn ngữ tự nhiên một cách trung thực với số liệu.</p>
+<p><b>2.4.2 Mục tiêu cụ thể:</b></p>
+<ul>
+<li>Xây dựng quy trình tiền xử lý dữ liệu tế bào dòng chảy chuẩn (gate loại bỏ mảnh vỡ/tế
+bào chết/tế bào dính đôi, bù trừ quang phổ, biến đổi arcsinh).</li>
+<li>Xây dựng mô hình tham chiếu "thế nào là bình thường" từ nhiều mẫu tủy xương khỏe mạnh,
+với ngưỡng được hiệu chuẩn bằng phương pháp thống kê loại-trừ-một thay vì chọn theo kinh
+nghiệm.</li>
+<li>Xây dựng bước phân cụm dựa trên mật độ để phân biệt dòng ung thư thật khỏi nhiễu và
+khỏi hematogones.</li>
+<li>Đo đạc định lượng hiệu năng: giới hạn phát hiện, độ nhạy, độ đặc hiệu, độ chính xác,
+khả năng lặp lại và thông lượng xử lý.</li>
+<li>Xây dựng một ứng dụng web hoàn chỉnh (giao diện trực quan hóa + tác nhân AI hỏi–đáp)
+để minh họa quy trình trên trong thực tế.</li>
+</ul>
+
+<h2>Chương 3: Thiết kế và phương pháp nghiên cứu</h2>
+
+<h3>3.1 Phương pháp nghiên cứu</h3>
+<p><b>3.1.1 Nghiên cứu tài liệu.</b> Nhóm tìm hiểu tài liệu về miễn dịch học tế bào dòng
+chảy trong bạch cầu cấp dòng lympho B, đặc biệt về hematogones và cách chúng bị nhầm với
+lymphoblast <span class="note">[1]</span>; về các quy trình chuẩn hóa phân tích tế bào
+dòng chảy <span class="note">[3]</span> và phép biến đổi dữ liệu huỳnh quang đã bù trừ
+<span class="note">[4]</span>; và về hai họ thuật toán làm nền tảng cho bước phát hiện:
+phát hiện điểm bất thường dựa trên khoảng cách/mật độ láng giềng gần nhất
+<span class="note">[6]</span> và phân cụm dựa trên mật độ <span class="note">[5]</span>.
+</p>
+<p><b>3.1.2 Phương pháp thu thập số liệu.</b> Do dữ liệu tế bào dòng chảy thật của bệnh
+nhân là dữ liệu y tế nhạy cảm, không thể thu thập công khai ở quy mô cần thiết để kiểm
+định thuật toán mà không có sự đồng ý và giám sát đạo đức y khoa, nhóm xây dựng một
+<b>bộ tạo dữ liệu mô phỏng</b> tái tạo đúng bảng màu (panel) 14 kênh dùng để sàng lọc
+B-ALL trong thực hành lâm sàng, với 13 dấu ấn kháng nguyên (CD45, CD34, CD19, CD10, CD20,
+CD3, CD5, CD7, CD13, CD33, CD117, HLA-DR, CD38) cộng một kênh sống/chết và ba kênh tán xạ
+(FSC-A, FSC-H, SSC-A).
+Bộ tạo dữ liệu mô phỏng đúng đặc điểm khó nhất của bài toán thật: hematogones được sinh
+dọc theo một trục trưởng thành liên tục (một biến ẩn t từ 0 đến 1 chi phối CD10 giảm dần,
+CD20 và CD45 tăng dần, tương quan với nhau), còn dòng ung thư được sinh thành một khối chặt
+đồng nhất (phương sai nhỏ, không tương quan giữa các dấu ấn) — tức là mô phỏng đúng cấu
+trúc hình học phân biệt hai nhóm này trong tài liệu y khoa, không chỉ mô phỏng giá trị
+trung bình của từng dấu ấn.
+</p>
+
+<h3>3.2 Thiết kế nghiên cứu</h3>
+<p><b>3.2.1 Quy trình xử lý một mẫu.</b> Toàn bộ quy trình gồm sáu bước tuần tự:</p>
+<div class="fig">
+  <div class="pipeline">
+    <div class="box">Tệp .fcs</div><span class="arrow">→</span>
+    <div class="box">Gate QC<br><span style="font-size:9pt">(loại mảnh vỡ,<br>tế bào chết/dính đôi)</span></div><span class="arrow">→</span>
+    <div class="box">Bù trừ<br>quang phổ</div><span class="arrow">→</span>
+    <div class="box">Biến đổi<br>arcsinh</div><span class="arrow">→</span>
+    <div class="box">Giai đoạn 1:<br>Đánh dấu</div><span class="arrow">→</span>
+    <div class="box">Giai đoạn 2:<br>Phân cụm</div><span class="arrow">→</span>
+    <div class="box">Báo cáo +<br>diễn giải AI</div>
+  </div>
+  <div class="fig-cap">Hình 1. Quy trình xử lý một mẫu tế bào dòng chảy trong AskCell.</div>
+</div>
+
+<p><b>3.2.2 Mô hình tham chiếu "bình thường".</b> Mỗi tế bào khỏe mạnh, sau tiền xử lý,
+là một điểm trong không gian 13 chiều (13 dấu ấn). Gộp tế bào từ nhiều mẫu tủy xương khỏe
+mạnh lại tạo thành một "đám mây" mô tả mọi loại tế bào bình thường và tỉ lệ của chúng.
+Với một tế bào bệnh nhân, câu hỏi "tế bào này có bình thường không" được trả lời bằng
+khoảng cách trung bình (đã chuẩn hóa z-score) tới k = 15 tế bào khỏe mạnh gần nhất trong
+đám mây đó — khoảng cách nhỏ nghĩa là tồn tại tế bào giống vậy ở người khỏe mạnh, khoảng
+cách lớn nghĩa là không.</p>
+
+<p><b>3.2.3 Hiệu chuẩn ngưỡng bằng loại-trừ-một.</b> Vì điểm số trên là khoảng cách nên
+"lớn" không có ý nghĩa nếu không có thang đo. Ngưỡng được <i>đo</i>, không đoán: mỗi mẫu
+khỏe mạnh lần lượt được cho ra ngoài, tính điểm dựa trên tham chiếu chỉ gồm các mẫu khỏe
+mạnh còn lại, rồi ghép toàn bộ điểm số đó lại thành một phân bố "điểm số của tế bào khỏe
+mạnh khi bị coi là dữ liệu chưa từng thấy". Ngưỡng là phân vị thứ 99,9 của phân bố này —
+nghĩa là tỉ lệ báo động nhầm được <i>chọn chủ động</i> ở mức khoảng 1 trên 1.000 tế bào
+khỏe mạnh, chứ không phải một con số ngẫu nhiên.</p>
+
+<p><b>3.2.4 Vì sao một giai đoạn là chưa đủ.</b> Với tỉ lệ báo động nhầm 0,1%, một mẫu
+400.000 sự kiện sẽ có khoảng 400 tế bào bị đánh dấu ngay cả ở người hoàn toàn khỏe mạnh.
+Ngưỡng không thể "siết" thêm để triệt tiêu con số này, vì làm vậy cũng đồng thời xóa luôn
+những quần thể nhỏ (200 tế bào) quan trọng nhất cần phát hiện. Do đó câu hỏi thực sự không
+phải "có tế bào lạ không" mà là "các tế bào lạ có <i>nhiều, và lạ theo cùng một kiểu</i>
+hay không" — đây là câu hỏi hình học, được trả lời ở giai đoạn 2.</p>
+
+<p><b>3.2.5 Phân cụm dựa trên mật độ (giai đoạn 2).</b> Trong tập các tế bào đã bị đánh
+dấu ở giai đoạn 1, một tế bào được coi là "lõi" nếu có ít nhất 8 tế bào bị đánh dấu khác
+nằm trong một bán kính liên kết; các điểm lõi liên thông với nhau qua bán kính đó hợp
+thành một cụm; cụm có từ 30 sự kiện trở lên được báo cáo là một quần thể. Bán kính liên
+kết được đặt bằng 2,0 lần khoảng cách láng giềng trung vị của chính tham chiếu khỏe mạnh —
+hệ số này được đo trên dữ liệu mô phỏng (khoảng cách láng giềng thứ 8 trong tập bị đánh
+dấu: 0,20–0,43 cho quần thể ung thư thật, so với 0,86–6,45 cho nhiễu rải rác) và có một
+kiểm thử tự động (guard test) báo lỗi ngay nếu khoảng phân tách đó không còn đúng.
+<b>Đây là tham số duy nhất cần đo lại trên dữ liệu thật</b> trước khi tin tưởng con số
+này ở quy mô lâm sàng (xem mục 5.2).</p>
+
+<p><b>3.2.6 Diễn giải kết quả và tác nhân AI.</b> Với mỗi quần thể được phát hiện, hệ
+thống tính độ lệch của từng dấu ấn so với trung bình khỏe mạnh (theo đơn vị độ lệch chuẩn)
+để suy ra kiểu hình, rồi so khớp kiểu hình đó với một danh sách các bệnh lý ứng viên kèm
+bằng chứng ủng hộ/phản bác — không bao giờ khẳng định một chẩn đoán duy nhất, vì kiểu hình
+miễn dịch một mình không đủ để chẩn đoán ung thư máu. Một tác nhân AI (mô hình Claude của
+Anthropic) sau đó trả lời câu hỏi bằng ngôn ngữ tự nhiên về báo cáo này; tác nhân được lập
+trình theo kiến trúc "gọi công cụ" (tool use) — mọi con số nó phát biểu phải được truy xuất
+qua một lệnh gọi hàm tính toán thật, chưa từng được phép tự suy diễn hay bịa số liệu, và
+danh sách các lệnh gọi công cụ đã dùng được hiển thị công khai kèm câu trả lời.</p>
+
+</div>
+
+<!-- ============================== CHƯƠNG 4 ============================== -->
+<div class="page page-break">
+
+<h2>Chương 4: Tiến hành nghiên cứu</h2>
+
+<h3>4.1 Tìm hiểu các công trình nghiên cứu liên quan</h3>
+<p>
+Nhóm khảo sát tài liệu về chuẩn hóa phân tích miễn dịch học tế bào dòng chảy
+<span class="note">[3]</span>, về theo dõi bệnh tồn dư tối thiểu bằng tế bào dòng chảy
+trong bạch cầu cấp <span class="note">[2]</span>, và đặc biệt về đặc điểm miễn dịch của
+hematogones so với lymphoblast ác tính trên 662 mẫu tủy xương liên tiếp
+<span class="note">[1]</span> — công trình này là căn cứ trực tiếp cho quyết định thiết kế
+quan trọng nhất của đề tài: phân biệt hai nhóm bằng cấu trúc hình học (cụm chặt và đồng
+nhất so với trải dài mượt theo trục trưởng thành) thay vì bằng một ngưỡng dấu ấn đơn lẻ.
+Về mặt thuật toán, nhóm tham khảo hai công trình nền tảng: DBSCAN cho phân cụm dựa trên
+mật độ <span class="note">[5]</span> và LOF cho phát hiện điểm bất thường dựa trên mật độ
+láng giềng cục bộ <span class="note">[6]</span>, từ đó thiết kế lại quy tắc phân cụm phù
+hợp với đặc thù bài toán (chỉ phân cụm trong tập đã bị đánh dấu, không phải toàn bộ dữ
+liệu).
+</p>
+
+<h3>4.2 Xác định bối cảnh hiện tại và mục tiêu cần nghiên cứu</h3>
+<p>
+Quy trình gate thủ công vẫn là chuẩn thực hành lâm sàng hiện nay nhưng tồn tại hai vấn đề
+đã nêu ở Chương 1: tốc độ và tính nhất quán. Mục tiêu của nhóm là chứng minh một quy trình
+tính toán có thể đạt tốc độ xử lý nhanh hơn nhiều lần, cho kết quả lặp lại tuyệt đối, đồng
+thời không đánh đổi bằng việc báo động nhầm trên các trường hợp khó (hematogones) — tức
+là giải quyết đúng điểm nghẽn thực tế chứ không chỉ chạy nhanh hơn trên bài toán dễ.
+</p>
+
+<h3>4.3 Đối tượng nghiên cứu và phạm vi dữ liệu</h3>
+<p><b>4.3.1 Đối tượng nghiên cứu:</b> Quần thể tế bào bất thường (lymphoblast dòng B) trong
+mẫu tủy xương, đối chiếu với quần thể tế bào bình thường bao gồm cả hematogones — nhóm tế
+bào bình thường dễ gây nhầm lẫn nhất.</p>
+<p><b>4.3.2 Phạm vi dữ liệu nghiên cứu:</b></p>
+<ul>
+<li>Một bảng màu 14 màu (13 dấu ấn kháng nguyên + 1 kênh sống/chết) cộng 3 kênh tán xạ
+(FSC-A, FSC-H, SSC-A), mô phỏng đúng bảng màu sàng lọc B-ALL dùng trong thực hành lâm sàng.</li>
+<li>20 mẫu tủy xương khỏe mạnh mô phỏng (60.000 sự kiện/mẫu) dùng làm tham chiếu, cùng các
+mẫu bệnh nhân mô phỏng ở nhiều mức độ nặng khác nhau để kiểm định.</li>
+<li>Giới hạn nghiên cứu: một bảng màu cố định; kết quả đo đạc là trên dữ liệu mô phỏng,
+chưa phải dữ liệu lâm sàng thật (xem hạn chế ở mục 5.2).</li>
+</ul>
+
+<h3>4.4 Thu thập và tạo bộ dữ liệu</h3>
+<p>
+Vì không thể tiếp cận dữ liệu tế bào dòng chảy thật của bệnh nhân ở giai đoạn nghiên cứu
+này, nhóm xây dựng một bộ tạo dữ liệu mô phỏng bằng Python, sinh giá trị cường độ huỳnh
+quang theo phân bố log-chuẩn cho từng quần thể tế bào (bạch cầu hạt, lympho T, lympho B
+trưởng thành, mono bào, NK, blast dòng tủy, hồng cầu non và hematogones), với tỉ lệ phần
+trăm mô phỏng đúng thành phần một mẫu tủy xương bình thường. Bộ dữ liệu gồm:</p>
+<table class="data">
+<tr><th>Tệp</th><th>Vai trò</th><th>Số sự kiện</th><th>Tỉ lệ blast</th></tr>
+<tr><td>normal_bm_01 … normal_bm_20</td><td>Xây tham chiếu "bình thường"</td><td>60.000/tệp</td><td>0%</td></tr>
+<tr><td>patient_overt</td><td>Bệnh rõ ràng</td><td>60.000</td><td>25%</td></tr>
+<tr><td>patient_mrd</td><td>Mức bệnh tồn dư tối thiểu</td><td>400.000</td><td>0,05%</td></tr>
+<tr><td>patient_normal</td><td>Đối chứng đặc hiệu</td><td>60.000</td><td>0%</td></tr>
+</table>
+<p class="note">Bảng 1. Bộ dữ liệu mô phỏng dùng để xây tham chiếu và kiểm định.</p>
+<p>
+Mỗi tệp còn có nhãn thật (ground truth) cho từng sự kiện, cho phép tính chính xác độ nhạy
+và độ chính xác của thuật toán thay vì chỉ quan sát định tính.
+</p>
+
+<h3>4.5 Tiền xử lý dữ liệu</h3>
+<p>
+Ba bước tiền xử lý bắt buộc trước khi tính toán: (1) <b>Gate QC</b> loại bỏ mảnh vỡ, tế
+bào chết (qua kênh sống/chết) và tế bào dính đôi (qua tỉ lệ chiều cao/diện tích tín hiệu
+tán xạ); (2) <b>Bù trừ quang phổ</b> triệt tiêu hiện tượng tràn tín hiệu giữa các kênh
+huỳnh quang; (3) <b>Biến đổi arcsinh</b> nén khoảng 5 bậc độ lớn cường độ huỳnh quang về
+một thang có thể so sánh được — đây là phép biến đổi tiêu chuẩn của ngành cho dữ liệu đã
+bù trừ có thể mang giá trị âm <span class="note">[4]</span>, khác với phép biến đổi
+logarit thông thường không xử lý được giá trị âm hoặc gần 0.
+</p>
+
+<h3>4.6 Chuẩn bị mô hình và công cụ nghiên cứu</h3>
+<p>Công cụ và thư viện sử dụng trong dự án:</p>
+<ul>
+<li><b>Python / FastAPI:</b> máy chủ backend, nơi toàn bộ quy trình tính toán chạy.</li>
+<li><b>NumPy, SciPy (cKDTree):</b> tìm kiếm láng giềng gần nhất và thống kê.</li>
+<li><b>AnnData:</b> cấu trúc dữ liệu tế bào đơn lẻ dùng chung cho toàn bộ pipeline.</li>
+<li><b>FlowKit, flowio, flowutils:</b> đọc tệp .fcs, bù trừ quang phổ, biến đổi dữ liệu.</li>
+<li><b>React, Vite, deck.gl (WebGL):</b> giao diện trực quan hóa hàng trăm nghìn tế bào
+theo thời gian thực.</li>
+<li><b>Anthropic Claude API:</b> tác nhân AI diễn giải kết quả qua kiến trúc gọi công cụ.</li>
+<li><b>GitHub Actions, Render, Vercel:</b> kiểm thử tự động và triển khai ứng dụng.</li>
+</ul>
+
+<h3>4.7 Hiệu chuẩn mô hình</h3>
+<p>
+Tham chiếu được xây từ 20 mẫu khỏe mạnh bằng phương pháp loại-trừ-một mô tả ở mục 3.2.3:
+với mỗi mẫu, hiệu chuẩn tạm loại mẫu đó ra, tính điểm số của nó dựa trên 19 mẫu còn lại,
+rồi gộp toàn bộ 20 lượt lại thành phân bố điểm số "khỏe mạnh nhưng chưa từng thấy". Ngưỡng
+cuối cùng là phân vị 99,9 của phân bố này. Để việc hiệu chuẩn với số lượng mẫu tham chiếu
+lớn không làm bộ nhớ tăng theo số mẫu, mỗi mẫu chỉ đóng góp một phần đã lấy mẫu ngẫu nhiên
+đều nhau vào tập so sánh, trong khi mẫu đang được giữ lại để tính điểm vẫn giữ nguyên độ
+phân giải đầy đủ — nhờ vậy độ chính xác của ngưỡng đo được không đổi dù bộ nhớ sử dụng
+giảm đáng kể.
+</p>
+
+<h3>4.8 Đánh giá mô hình và kết quả</h3>
+<p>
+Hiệu năng được đo bằng một bộ kiểm định gồm bốn phần: chuỗi pha loãng ở ba độ sâu thu nhận
+(50.000 / 200.000 / 500.000 sự kiện) với năm tỉ lệ blast khác nhau; bốn mẫu đối chứng khỏe
+mạnh (đều chứa hematogones) để đo độ đặc hiệu; năm lần chạy lặp lại trên cùng một mẫu để
+đo khả năng lặp lại; và thời gian xử lý.
+</p>
+<table class="data">
+<tr><th>Chỉ số</th><th>Giá trị</th></tr>
+<tr><td>Giới hạn phát hiện (thu nhận sâu nhất, 500.000 sự kiện)</td><td>0,01%</td></tr>
+<tr><td>Độ nhạy trung bình (các ca phát hiện được)</td><td>97,94%</td></tr>
+<tr><td>Độ chính xác trung bình (precision, các ca phát hiện được)</td><td>100,0%</td></tr>
+<tr><td>Độ đặc hiệu (đối chứng khỏe mạnh)</td><td>100,0% (4/4)</td></tr>
+<tr><td>Khả năng lặp lại giữa các lần chạy</td><td>Giống hệt nhau</td></tr>
+<tr><td>Thông lượng xử lý</td><td>~1,55 giây / 100.000 sự kiện</td></tr>
+</table>
+<p class="note">Bảng 2. Kết quả kiểm định định lượng của hệ thống phát hiện.</p>
+<table class="data">
+<tr><th>Sự kiện thu nhận</th><th>Tỉ lệ nhỏ nhất phát hiện được</th><th>≈ Số tế bào</th></tr>
+<tr><td>50.000</td><td>0,1%</td><td>~50</td></tr>
+<tr><td>200.000</td><td>0,05%</td><td>~100</td></tr>
+<tr><td>500.000</td><td>0,01%</td><td>~50</td></tr>
+</table>
+<p class="note">Bảng 3. Giới hạn phát hiện theo độ sâu thu nhận.</p>
+<p>
+Bảng 3 cho thấy điều quan trọng nhất về mặt khoa học của kết quả: trên một khoảng độ sâu
+thu nhận gấp mười lần, số tế bào nhỏ nhất có thể phát hiện được gần như không đổi
+(~50–100 tế bào), trong khi tỉ lệ phần trăm tương ứng thay đổi gấp mười lần. Nói cách khác,
+<b>giới hạn phát hiện thực chất là một số lượng tế bào, không phải một tỉ lệ phần trăm cố
+định</b> — xác nhận đúng giả thuyết đã đặt ra ở mục 2.3, và giải thích vì sao các xét
+nghiệm MRD lâm sàng phải thu nhận tới hàng triệu sự kiện để hạ được ngưỡng phát hiện xuống
+mức phần nghìn phần trăm. Bốn mẫu đối chứng khỏe mạnh (đều có hematogones) không mẫu nào bị
+báo động nhầm, xác nhận bước phân cụm phân biệt được hematogones khỏi dòng ung thư thật chứ
+không chỉ đơn thuần hạ độ nhạy để tránh báo động nhầm.
+</p>
+
+<h3>4.9 Xây dựng hệ thống ứng dụng</h3>
+<p>
+Sau khi quy trình tính toán được kiểm định, nhóm xây dựng một ứng dụng web hoàn chỉnh để
+minh họa quy trình trong thực tế. Người dùng kéo–thả một tệp .fcs của bệnh nhân vào giao
+diện; hệ thống tự động gate, tính điểm, phân cụm và trả về ba thứ trong cùng một lần tính
+toán: (1) một hình ảnh trực quan — đám mây khỏe mạnh màu xám mờ, tế bào bệnh nhân chồng
+lên trên, quần thể bất thường tô màu đỏ; (2) một tỉ lệ phần trăm; (3) một kiểu hình kèm
+danh sách bệnh lý ứng viên và bằng chứng cho từng bệnh lý. Người dùng có thể đặt câu hỏi
+bằng ngôn ngữ tự nhiên (ví dụ: "kết quả này đáng tin đến mức nào, điều gì sẽ thay đổi kết
+luận") và xem chính xác những lệnh gọi công cụ mà AI đã dùng để trả lời.
+</p>
+</div>
+
+<!-- ============================== CHƯƠNG 5 ============================== -->
+<div class="page page-break">
+
+<h2>Chương 5: Kết luận khoa học</h2>
+
+<h3>5.1 Kết luận chung</h3>
+<p>
+Kết quả kiểm định xác nhận cả ba giả thuyết đặt ra ở mục 2.3: ngưỡng hiệu chuẩn bằng
+loại-trừ-một cho phép kiểm soát chủ động tỉ lệ báo động nhầm; bước phân cụm dựa trên mật
+độ giữ được độ đặc hiệu tuyệt đối (100%, 4/4) trên các mẫu đối chứng chứa hematogones
+trong khi vẫn đạt độ nhạy trung bình 97,94% trên các ca có quần thể bất thường; và giới
+hạn phát hiện là một số lượng tế bào gần như cố định (~50–100 tế bào) chứ không phải một
+tỉ lệ phần trăm cố định. Hệ thống xử lý nhanh hơn nhiều lần so với gate thủ công và cho
+kết quả giống hệt nhau tuyệt đối giữa các lần chạy lặp lại — hai tính chất trực tiếp giải
+quyết vấn đề thực tiễn đã nêu ở Chương 1.
+</p>
+
+<h3>5.2 Những hạn chế</h3>
+<ul>
+<li>Toàn bộ số liệu hiệu năng đo được trên dữ liệu <b>mô phỏng</b>, phản ánh tính nhất quán
+nội tại của thuật toán chứ chưa phải độ chính xác lâm sàng thật. Xác nhận trên dữ liệu lâm
+sàng thật cần hàng trăm ca có chẩn đoán xác nhận và sự chấp thuận về đạo đức y khoa.</li>
+<li>Hệ số bán kính liên kết dùng cho bước phân cụm (mục 3.2.5) được đo trên dữ liệu mô
+phỏng và <b>phải được đo lại</b> trên dữ liệu thật trước khi tin cậy ở quy mô lâm sàng.</li>
+<li>Hệ thống được xây và kiểm định trên một bảng màu 14 kênh cố định; áp dụng cho bảng màu
+khác cần đo lại toàn bộ tham số.</li>
+<li>Hệ thống chỉ báo cáo các bệnh lý <i>giống với</i> kiểu hình quan sát được kèm bằng
+chứng, không đưa ra chẩn đoán — đây là giới hạn chủ đích, không phải thiếu sót, vì kiểu
+hình miễn dịch một mình không đủ để chẩn đoán ung thư máu.</li>
+</ul>
+
+<h3>5.3 Hướng phát triển</h3>
+<ul>
+<li>Hợp tác với một phòng xét nghiệm huyết học để tiếp cận dữ liệu tế bào dòng chảy thật
+(đã ẩn danh, có chấp thuận đạo đức y khoa) nhằm đo lại hệ số bán kính liên kết và xác nhận
+độ nhạy/độ đặc hiệu trên dữ liệu lâm sàng.</li>
+<li>Mở rộng danh sách bệnh lý ứng viên và bằng chứng đi kèm trong bước diễn giải kết quả.</li>
+<li>Mở rộng hỗ trợ nhiều bảng màu kháng thể khác nhau, không chỉ riêng bảng màu sàng lọc
+B-ALL hiện tại.</li>
+<li>Đánh giá khả năng mở rộng phương pháp sang các loại bạch cầu cấp khác (dòng tủy, dòng
+lympho T).</li>
+</ul>
+</div>
+
+<!-- ============================== TÀI LIỆU THAM KHẢO ============================== -->
+<div class="page page-break">
+<h1>NGUỒN THAM KHẢO</h1>
+<ol class="ref-list">
+<li>[1] R. W. McKenna, L. T. Washington, D. B. Aquino, L. J. Picker, and S. H. Kroft,
+"Immunophenotypic analysis of hematogones (B-lymphocyte precursors) in 662 consecutive
+bone marrow specimens by 4-color flow cytometry," <i>Blood</i>, vol. 98, no. 8,
+pp. 2498–2507, Oct. 2001.</li>
+<li>[2] B. L. Wood, "Flow cytometric monitoring of residual disease in acute leukemia,"
+<i>Methods in Molecular Biology</i>, vol. 999, pp. 123–136, 2013.</li>
+<li>[3] G. Finak, M. Langweiler, M. Jaimes, <i>et al.</i>, "Standardizing flow cytometry
+immunophenotyping analysis from the Human ImmunoPhenotyping Consortium,"
+<i>Scientific Reports</i>, vol. 6, art. 20686, Feb. 2016.</li>
+<li>[4] D. R. Parks, M. Roederer, and W. A. Moore, "A new 'Logicle' display method avoids
+deceptive effects of logarithmic scaling for low signals and compensated data,"
+<i>Cytometry Part A</i>, vol. 69A, no. 6, pp. 541–551, Jun. 2006.</li>
+<li>[5] M. Ester, H.-P. Kriegel, J. Sander, and X. Xu, "A density-based algorithm for
+discovering clusters in large spatial databases with noise," in <i>Proc. 2nd Int. Conf.
+Knowledge Discovery and Data Mining (KDD-96)</i>, Portland, OR, 1996, pp. 226–231.</li>
+<li>[6] M. M. Breunig, H.-P. Kriegel, R. T. Ng, and J. Sander, "LOF: Identifying
+density-based local outliers," in <i>Proc. 2000 ACM SIGMOD Int. Conf. Management of
+Data</i>, 2000, pp. 93–104.</li>
+</ol>
+</div>
+
+</body>
+</html>
