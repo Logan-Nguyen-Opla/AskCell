@@ -43,7 +43,6 @@ body {
  * Purely a visual/style utility — no effect on layout, data, or behavior.
  */
 .glass-panel {
-  position: relative;
   background-color: rgba(15, 15, 28, 0.5);
   background-image:
     linear-gradient(180deg, rgba(30, 27, 55, 0.55), rgba(10, 10, 20, 0.35)),
@@ -58,7 +57,6 @@ body {
 
 /* Same trick, tuned for small chips/inline surfaces where a big blur is too heavy. */
 .glass-panel-soft {
-  position: relative;
   background-color: rgba(15, 15, 28, 0.55);
   background-image:
     linear-gradient(180deg, rgba(30, 27, 55, 0.4), rgba(10, 10, 20, 0.25)),
