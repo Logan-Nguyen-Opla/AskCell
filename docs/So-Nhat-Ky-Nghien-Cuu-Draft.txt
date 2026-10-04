@@ -1,0 +1,208 @@
+GHI CHÚ TRƯỚC KHI CHÉP TAY
+===========================
+- Bản nháp, không chép dòng này. Viết đơn giản như lời của mình.
+- Ngày: trang 9, 10, 11 lấy đúng ngày commit thật (21/08, 29/08, 30/08).
+  Các trang khác là tôi đoán -- sửa lại nếu nhớ ngày khác.
+- [Vẽ: ...] là gợi ý vẽ gì, vài giây thôi, không cần đẹp.
+- Mỗi trang giờ ngắn hơn -- 1 trang là đủ, không cần viết dài.
+
+
+================================================================
+NGÀY: 15/05/2026                        TRANG: 1
+GIAI ĐOẠN: Nghĩ ý tưởng
+THỜI GIAN: 19 giờ - 20 giờ
+
+1. MỤC TIÊU: Tìm một đề tài AI + y học.
+2. DỤNG CỤ: Claude (AI) để tìm hướng đi.
+3. TIẾN TRÌNH: Nghĩ ra ý tưởng xem dữ liệu gen ung thư bằng bản đồ chấm
+   màu (UMAP), có AI hỏi-đáp. Đặt tên: AskCell.
+[Vẽ: bản đồ chấm nhiều màu]
+4. KẾT QUẢ: Chưa có, mới lên ý tưởng.
+5. RÚT KINH NGHIỆM: Chưa có lỗi gì, mới là ngày nghĩ trên giấy.
+6. TIẾP THEO: Học thêm, rồi làm thử một bản demo.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 22/05/2026                        TRANG: 2
+GIAI ĐOẠN: Học công cụ cần dùng
+THỜI GIAN: 19 giờ - 20 giờ30
+
+1. MỤC TIÊU: Học React (giao diện) và cách gọi Claude API.
+2. DỤNG CỤ: Tài liệu hướng dẫn, Claude.
+3. TIẾN TRÌNH: Làm theo vài bài hướng dẫn nhỏ, thử hiển thị vài trăm chấm
+   lên màn hình.
+[Vẽ: vài chấm tròn trên nền đen]
+4. KẾT QUẢ: Hiển thị được chấm lên màn hình, nhưng chưa có dữ liệu thật.
+5. RÚT KINH NGHIỆM: Vẽ hàng trăm nghìn chấm khác với vẽ vài chục -- cần
+   công cụ mạnh hơn (deck.gl) chứ không vẽ tay từng chấm được.
+6. TIẾP THEO: Ghép công cụ vẽ với dữ liệu thật.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 03/08/2026                        TRANG: 3
+GIAI ĐOẠN: Làm xong bản demo đầu tiên
+THỜI GIAN: 19 giờ - 22 giờ
+
+1. MỤC TIÊU: Hoàn thành bản demo xem bản đồ gen + hỏi AI.
+2. DỤNG CỤ: React, deck.gl, Claude API, dữ liệu mẫu 3.000 tế bào.
+3. TIẾN TRÌNH: Ghép xong giao diện, đưa lên GitHub, chạy thử thành công.
+[Vẽ: giao diện 2 cột -- bản đồ trái, khung chat phải]
+4. KẾT QUẢ: Demo chạy được, xem được 3.000 tế bào, AI trả lời được.
+5. RÚT KINH NGHIỆM: Chưa thấy vấn đề -- vấn đề thật lộ ra ở trang sau.
+6. TIẾP THEO: Cho người khác xem thử.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 05/08/2026                        TRANG: 4
+GIAI ĐOẠN: Đổi hướng đề tài
+THỜI GIAN: 19 giờ - 20 giờ30
+
+1. MỤC TIÊU: Xem phản ứng người khác, quyết định có tiếp tục không.
+2. DỤNG CỤ: Không có, chỉ ngồi suy nghĩ lại.
+3. TIẾN TRÌNH: Người xem thử hỏi: "Cái này dùng để làm gì? Nó không nói
+   bệnh nhân có bệnh hay không." Nhận ra bản đồ gen không trả lời được câu
+   hỏi cụ thể nào. Nhớ đến flow cytometry và MRD -- một bài toán có đáp án
+   rõ ràng. Quyết định đổi hướng.
+[Vẽ: dấu "?" to -- mũi tên sang dấu "✓"]
+4. KẾT QUẢ: Không có số liệu, ngày quyết định.
+5. RÚT KINH NGHIỆM: Ý tưởng hay chưa chắc là đề tài tốt nếu không trả lời
+   được câu hỏi cụ thể. May là nhận ra sớm.
+6. TIẾP THEO: Đọc về flow cytometry.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 10/08/2026                        TRANG: 5
+GIAI ĐOẠN: Đọc tài liệu về vấn đề mới
+THỜI GIAN: 19 giờ - 21 giờ
+
+1. MỤC TIÊU: Hiểu vì sao tìm tế bào ung thư còn sót lại lại khó.
+2. DỤNG CỤ: Claude, 1 bài báo khoa học về hematogones.
+3. TIẾN TRÌNH: Biết được có một loại tế bào bình thường (hematogones)
+   trông gần giống hệt tế bào ung thư. Thứ phân biệt chúng không phải một
+   con số, mà là CÁCH chúng nằm trong không gian dữ liệu.
+[Vẽ: một vệt chấm cong (hematogones) cạnh một cụm chấm tròn đặc (ung thư)]
+4. KẾT QUẢ: Không có số liệu, ngày đọc tài liệu.
+5. RÚT KINH NGHIỆM: Suýt định chỉ dùng 1 con số để phân biệt -- bỏ ý đó
+   ngay vì biết chắc sẽ báo nhầm.
+6. TIẾP THEO: Viết dữ liệu giả để thử nghiệm.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 15/08/2026                        TRANG: 6
+GIAI ĐOẠN: Viết dữ liệu giả
+THỜI GIAN: 19 giờ - 21 giờ
+
+1. MỤC TIÊU: Viết chương trình tạo dữ liệu tế bào giả, vì không xin được
+   dữ liệu bệnh nhân thật.
+2. DỤNG CỤ: Python, NumPy.
+3. TIẾN TRÌNH: Viết xong, tạo ra được hàng chục nghìn tế bào giả, mỗi tế
+   bào có 13 con số.
+[Vẽ: 1 dòng số ví dụ, kiểu [12, 450, 30, ...]]
+4. KẾT QUẢ: Tạo được 20 mẫu "tủy xương khỏe mạnh" giả + vài mẫu "bệnh
+   nhân" giả.
+5. RÚT KINH NGHIỆM: Quên giới hạn số âm lúc đầu, ra vài số vô lý -- phải
+   sửa lại.
+6. TIẾP THEO: Viết bản phát hiện đầu tiên.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 17/08/2026                        TRANG: 7
+GIAI ĐOẠN: Bản phát hiện đầu tiên -- báo nhầm quá nhiều
+THỜI GIAN: 19 giờ - 21 giờ
+
+1. MỤC TIÊU: Viết bản đầu tiên: so tế bào bệnh nhân với tế bào khỏe mạnh.
+2. DỤNG CỤ: Python, SciPy.
+3. TIẾN TRÌNH: Chạy thử trên mẫu có 46 tế bào ung thư thật. Bản đầu tiên
+   báo tới 519 tế bào -- sai gần như hoàn toàn.
+[Vẽ: một đống chấm, vài chấm đỏ rải rác lẫn trong đó]
+4. KẾT QUẢ: 519 tế bào bị báo, chỉ 46 là thật.
+5. RÚT KINH NGHIỆM: Chỉ xem "lạ" thôi chưa đủ.
+6. TIẾP THEO: Nghĩ cách lọc bớt báo nhầm.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 19/08/2026                        TRANG: 8
+GIAI ĐOẠN: Sửa xong -- thêm bước lọc theo nhóm
+THỜI GIAN: 19 giờ - 21 giờ
+
+1. MỤC TIÊU: Giảm số báo nhầm từ 519 xuống.
+2. DỤNG CỤ: Mẫu 500.000 sự kiện, 46 tế bào ung thư thật.
+3. TIẾN TRÌNH: Nhận ra tế bào ung thư thật tụ thành một đám, còn báo nhầm
+   thì rải rác. Thêm bước: chỉ tin tế bào lạ nào tụ thành đám.
+[Vẽ: một đám chấm đỏ tụ chặt, khoanh tròn lại]
+4. KẾT QUẢ: 519 -> 44/46 đúng, 0 tế bào khỏe mạnh bị báo nhầm.
+5. RÚT KINH NGHIỆM: Vấn đề không phải ở ngưỡng, mà ở việc thiếu bước xem
+   hình dạng của nhóm.
+6. TIẾP THEO: Đo thử trên nhiều mẫu khác.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 21/08/2026                        TRANG: 9
+GIAI ĐOẠN: Đo kết quả
+THỜI GIAN: 19 giờ - 22 giờ
+
+1. MỤC TIÊU: Đo xem hệ thống tốt cỡ nào trên nhiều mẫu khác nhau.
+2. DỤNG CỤ: Mẫu bệnh nặng, mẫu bệnh nhẹ, mẫu người khỏe mạnh.
+3. TIẾN TRÌNH: Chạy ở 3 mức số lượng tế bào khác nhau, thử 4 mẫu khỏe
+   mạnh, chạy lại cùng 1 mẫu 5 lần.
+[Vẽ: 1 bảng nhỏ ghi số chính]
+4. KẾT QUẢ: 4/4 mẫu khỏe mạnh đúng. 5 lần chạy giống hệt nhau. Tốc độ
+   1,5 giây/100.000 tế bào.
+5. RÚT KINH NGHIỆM: Số tế bào nhỏ nhất phát hiện được gần như không đổi
+   dù lấy mẫu ít hay nhiều -- chỉ có tỉ lệ % là đổi.
+6. TIẾP THEO: Đưa lên web để demo.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 29/08/2026                        TRANG: 10
+GIAI ĐOẠN: Đưa lên web -- lỗi hết bộ nhớ
+THỜI GIAN: 20 giờ - 22 giờ
+
+1. MỤC TIÊU: Đưa chương trình lên máy chủ miễn phí Render.
+2. DỤNG CỤ: Render, thư viện psutil để đo bộ nhớ.
+3. TIẾN TRÌNH: Máy chủ báo lỗi "hết bộ nhớ", tự tắt. Máy mình nhiều RAM
+   nên không thấy, máy chủ miễn phí thì rất ít.
+[Vẽ: 1 cột bộ nhớ cao vọt -- 1 cột thấp hơn sau khi sửa]
+4. KẾT QUẢ: Trước 563MB (vượt giới hạn) -> sau khi sửa còn 387MB.
+5. RÚT KINH NGHIỆM: Chạy ngon trên máy mình không có nghĩa chạy ngon chỗ
+   khác.
+6. TIẾP THEO: Triển khai lại.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 30/08/2026                        TRANG: 11
+GIAI ĐOẠN: Đưa lên web -- lỗi hết giờ chờ
+THỜI GIAN: 19 giờ - 22 giờ
+
+1. MỤC TIÊU: Xác nhận bản sửa lỗi hôm trước chạy ổn định.
+2. DỤNG CỤ: Bảng điều khiển Render, mục nhật ký triển khai.
+3. TIẾN TRÌNH: Lỗi mới: "hết giờ chờ", không khởi động kịp. CPU máy chủ
+   miễn phí quá yếu. Sửa bằng cách chuẩn bị dữ liệu trước (lúc build),
+   không để lúc khởi động mới làm.
+[Vẽ: mặt cười khóc -> mặt cười bình thường]
+4. KẾT QUẢ: Trước 17,9 giây (quá chậm) -> sau chỉ 1,2 giây. Chạy ổn định.
+5. RÚT KINH NGHIỆM: Một thay đổi nhỏ (tăng số mẫu) đụng vào nhiều giới hạn
+   khác nhau của hệ thống thật.
+6. TIẾP THEO: Viết báo cáo, chuẩn bị thuyết trình.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________

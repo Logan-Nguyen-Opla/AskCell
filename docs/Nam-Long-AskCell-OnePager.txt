@@ -1,0 +1,24 @@
+Nguyễn Nam Long, AskCell
+Finding leftover leukemia cells in seconds instead of an hour
+
+Background
+- I'm Nam Long, a 9th grader. Started coding after 1st grade — Scratch, then Python, then C# in Unity.
+- In primary school I taught Scratch in English to kids in Australia and Canada.
+- At 13, became Chief Growth Officer at OplaCRM, a Vietnamese software company.
+- AskCell is my first project in medicine.
+
+The problem.
+After leukemia treatment, doctors check bone marrow for minimal residual disease (MRD) — cancer cells that survived, often only 0.01–0.1% of the sample. A flow cytometer measures ~17 values per cell on hundreds of thousands of cells, and an expert sorts them by hand on 2D plots: 30–60 minutes per sample, not always consistent between experts. The hard case is hematogones: normal immature B cells that carry almost the same surface markers as leukemic cells, fooling any single-marker rule.
+
+The AI build.
+AI is how I built this, not just a feature inside it. I had no immunology background, so I used Claude to learn the biology, design the detection method, and write and test the whole pipeline — 92 automated tests now pass. Claude also sits on top of the finished system as the agent a user actually talks to: it reads the report through tool calls only, never the raw data and never doing its own math, so every number it quotes traces back to a real computation.
+The method itself: AskCell builds a reference map of healthy marrow from 20 samples, then scores every patient cell by its average distance to its 15 nearest neighbours in that map. The cutoff is calibrated with leave-one-out, landing the threshold at the 99.9th percentile — the false-flag rate is fixed at 0.1% before any patient is tested. Since 0.1% of 400,000 cells is still 400 false flags, AskCell also runs density-based clustering over the flagged cells: hematogones spread along a maturation trajectory, while a real leukemic clone is a tight cluster of one cell's descendants. That difference in shape, not any marker, is what tells them apart. End to end: about 1.5 seconds per 100,000 cells.
+
+What I learned.
+The distance check alone failed on the case that matters most: on a 500,000-event sample with 46 real leukemic cells, it flagged 519, an 11.3x overcount. The clustering step brought that to 44 of 46, with zero healthy cells mislabeled — and 4/4 healthy samples (each with ~15,000 hematogones) came back clean.
+The detection limit is a number of cells, not a percentage — about 46–96 cells regardless of how many events were collected, while the percentage moved tenfold. Finding rarer disease just means collecting more events.
+Real patient data is protected, so testing so far uses a simulator I wrote of a 14-channel B-ALL panel. The clustering radius is the one parameter still calibrated on synthetic data, and needs re-measuring before this could be trusted clinically.
+
+The insight to leave with.
+Writing the model was the easy part. The hard part was realizing cancer and its look-alikes aren't separated by any single marker — they're separated by shape, which I only understood from reading the actual hematology literature with AI as my tutor.
+Question to leave them with: "How much domain knowledge does a builder need when AI can teach it on demand?"
