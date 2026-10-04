@@ -67,3 +67,65 @@ body {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
+
+/* ===========================================================
+ * Home screen only -- parallax / scroll-reveal / tilt chrome.
+ * Everything here is prefixed `home-` so it can never collide with
+ * FlowApp's own styles.
+ * =========================================================== */
+.home-scroll { scrollbar-width: thin; }
+
+.home-progress {
+  position: absolute; top: 0; left: 0; height: 3px; width: 0%;
+  background: linear-gradient(90deg, #6366f1, #a78bfa, #e879f9, #22d3ee);
+  z-index: 50; box-shadow: 0 0 12px rgba(167, 139, 250, 0.7);
+}
+
+.home-orb-field { position: absolute; top: 0; left: 0; width: 100%; height: 2600px; z-index: 0; pointer-events: none; overflow: hidden; }
+.home-orb { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.5; will-change: transform; }
+.home-orb-1 { width: 380px; height: 380px; top: -100px; left: -80px; background: radial-gradient(circle, #6366f1, transparent 70%); animation: home-drift1 22s ease-in-out infinite; }
+.home-orb-2 { width: 340px; height: 340px; top: 20%; right: -120px; background: radial-gradient(circle, #e879f9, transparent 70%); animation: home-drift2 26s ease-in-out infinite; }
+.home-orb-3 { width: 300px; height: 300px; top: 55%; left: 8%; background: radial-gradient(circle, #22d3ee, transparent 70%); animation: home-drift3 19s ease-in-out infinite; }
+@keyframes home-drift1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(50px, 35px) scale(1.12); } }
+@keyframes home-drift2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-45px, 50px) scale(1.08); } }
+@keyframes home-drift3 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(35px, -40px) scale(1.15); } }
+
+.home-sparkle-field { position: absolute; top: 0; left: 0; width: 100%; height: 2600px; z-index: 0; pointer-events: none; }
+.home-sparkle { position: absolute; animation: home-twinkle ease-in-out infinite; }
+@keyframes home-twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8) rotate(0deg); } 50% { opacity: 0.85; transform: scale(1.15) rotate(15deg); } }
+
+@keyframes home-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.home-badge-wrap { display: flex; flex-direction: column; align-items: center; animation: home-bob 5s ease-in-out infinite; }
+.home-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 10px #a78bfa; margin-bottom: -2px; }
+.home-badge-pin { width: 2px; height: 22px; background: linear-gradient(180deg, transparent, #a78bfa); }
+
+.home-hero-title {
+  background: linear-gradient(135deg, #a78bfa 0%, #e879f9 55%, #22d3ee 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  background-size: 200% 200%; animation: home-gradient-shift 6s ease infinite;
+}
+@keyframes home-gradient-shift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+.home-scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 4px; animation: home-bob 2.2s ease-in-out infinite; }
+
+.home-h2 {
+  font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #22d3ee; margin: 44px 0 14px; display: flex; align-items: center; gap: 10px;
+}
+.home-h2::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(34, 211, 238, 0.3), transparent); }
+
+.home-reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.8s cubic-bezier(.16,.84,.44,1), transform 0.8s cubic-bezier(.16,.84,.44,1); }
+.home-reveal.home-visible { opacity: 1; transform: translateY(0); }
+.home-reveal-delay-0.home-visible { transition-delay: 0s; }
+.home-reveal-delay-1.home-visible { transition-delay: 0.1s; }
+.home-reveal-delay-2.home-visible { transition-delay: 0.2s; }
+.home-reveal-delay-3.home-visible { transition-delay: 0.3s; }
+
+.home-tilt { transition: transform 0.15s ease-out, box-shadow 0.25s ease; transform-style: preserve-3d; will-change: transform; }
+.home-tilt:hover { box-shadow: 0 20px 50px -20px rgba(99, 102, 241, 0.45); }
+
+.home-stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px; }
+@media (min-width: 640px) { .home-stat-grid { grid-template-columns: repeat(4, 1fr); } }
+.home-stat-card { border-radius: 12px; padding: 16px 12px; text-align: center; cursor: default; }
+.home-stat-num { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 22px; font-weight: 700; color: #22d3ee; }
+.home-stat-label { font-size: 10.5px; color: #64748b; margin-top: 5px; line-height: 1.35; }
