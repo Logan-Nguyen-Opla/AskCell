@@ -5,6 +5,22 @@ GHI CHÚ TRƯỚC KHI CHÉP TAY
   Các trang khác là tôi đoán -- sửa lại nếu nhớ ngày khác.
 - [Vẽ: ...] là gợi ý vẽ gì, vài giây thôi, không cần đẹp.
 - Mỗi trang giờ ngắn hơn -- 1 trang là đủ, không cần viết dài.
+- Mục lục chép vào trang đầu tiên của sổ, trước trang 1.
+- Trang 12, 13 mới thêm: ngày 31/08 là đoán, 01/09 là ngày xuất file báo
+  cáo thật.
+- Trang 14, 15 mới thêm: ngày 08/09 và 15/09 là đoán -- sửa lại theo ngày thật.
+
+
+================================================================
+                            MỤC LỤC
+================================================================
+I.   Hình thành ý tưởng (15/05 - 22/05) .................. Trang 1 - 2
+II.  Bản demo đầu tiên và đổi hướng (03/08 - 05/08) ...... Trang 3 - 4
+III. Xây dựng và đo phương pháp phát hiện (10/08 - 21/08) Trang 5 - 9
+IV.  Đưa lên web (29/08 - 30/08) ......................... Trang 10 - 11
+V.   Viết báo cáo (31/08 - 01/09) ........................ Trang 12 - 13
+VI.  Hỏi người làm thật & giới hạn của đề tài (08/09 - 15/09)
+                                                            Trang 14 - 15
 
 
 ================================================================
@@ -204,5 +220,102 @@ THỜI GIAN: 19 giờ - 22 giờ
 5. RÚT KINH NGHIỆM: Một thay đổi nhỏ (tăng số mẫu) đụng vào nhiều giới hạn
    khác nhau của hệ thống thật.
 6. TIẾP THEO: Viết báo cáo, chuẩn bị thuyết trình.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 31/08/2026                        TRANG: 12
+GIAI ĐOẠN: Viết báo cáo -- tham khảo và lên dàn ý
+THỜI GIAN: 19 giờ - 21 giờ
+
+1. MỤC TIÊU: Biết một bài báo cáo nghiên cứu cần có những phần gì, rồi
+   lên dàn ý cho bài của mình.
+2. DỤNG CỤ: Sổ nhật ký này, các bài cũ của mình, vài bài dự thi của các
+   anh chị những năm trước.
+3. TIẾN TRÌNH: Đọc lại các bài trước đây mình từng viết để xem cách mình
+   trình bày. Đọc thêm vài bài của các năm trước để xem họ chia phần thế
+   nào: lý do chọn đề tài, phương pháp, kết quả, hạn chế. Ghi lại chỗ nào
+   viết rõ, chỗ nào khó hiểu. Sau đó lật lại sổ này, chọn số liệu chính
+   (519 -> 44/46, 4/4 mẫu khỏe mạnh, 563MB -> 387MB) để đưa vào bài.
+[Vẽ: dàn ý 5 ô xếp dọc: Lý do -> Phương pháp -> Kết quả -> Hạn chế ->
+ Hướng tiếp theo]
+4. KẾT QUẢ: Có dàn ý 5 phần và danh sách số liệu cần dùng.
+5. RÚT KINH NGHIỆM: Bài nào cũng có phần "hạn chế" -- bài mình cũng phải
+   nói thật là dữ liệu đang là dữ liệu giả, chưa thử trên bệnh nhân thật.
+   Ghi sổ đầy đủ từ đầu giúp viết báo cáo nhanh hơn rất nhiều.
+6. TIẾP THEO: Viết bài theo dàn ý.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 01/09/2026                        TRANG: 13
+GIAI ĐOẠN: Viết báo cáo -- hoàn thành bản đầu
+THỜI GIAN: 19 giờ - 22 giờ
+
+1. MỤC TIÊU: Viết xong bản đầu tiên của báo cáo và xuất ra file PDF.
+2. DỤNG CỤ: Dàn ý hôm trước, sổ nhật ký, Claude để soát lỗi chính tả và
+   cách diễn đạt.
+3. TIẾN TRÌNH: Viết lần lượt từng phần theo dàn ý. Phần phương pháp viết
+   lại 2 lần vì lần đầu dùng nhiều từ chuyên môn quá, người đọc không hiểu.
+   Thêm hình bản đồ chấm và bảng kết quả. Đọc lại, so với các bài năm
+   trước xem còn thiếu phần nào.
+[Vẽ: tờ giấy có tiêu đề "AskCell" + 1 bảng nhỏ + 1 hình chấm]
+4. KẾT QUẢ: Xong bản đầu của báo cáo, xuất được file PDF.
+5. RÚT KINH NGHIỆM: Tham khảo bài khác là để học cách trình bày, còn nội
+   dung và số liệu phải lấy từ chính việc mình làm. Viết đơn giản thì
+   người đọc dễ hiểu hơn.
+6. TIẾP THEO: Đưa thầy/cô xem góp ý, sửa lại, chuẩn bị thuyết trình.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 08/09/2026                        TRANG: 14
+GIAI ĐOẠN: Tìm hiểu thêm từ bác sĩ, chuyên gia và công ty trong ngành
+THỜI GIAN: 19 giờ - 21 giờ
+
+1. MỤC TIÊU: Hỏi người làm thật trong ngành xem đề tài của mình có đúng
+   hướng không, và còn thiếu gì.
+2. DỤNG CỤ: Báo cáo bản đầu, bản demo trên web, danh sách câu hỏi chuẩn
+   bị trước.
+3. TIẾN TRÌNH: Tìm đọc thêm tài liệu và trò chuyện với bác sĩ, chuyên gia
+   xét nghiệm, người làm sinh học (biologist) và một số công ty trong
+   ngành. Cho họ xem demo, hỏi: trong thực tế tìm tế bào ung thư còn sót
+   lại khó nhất ở đâu? Kết quả của mình có hợp lý không? Ghi lại góp ý.
+[Vẽ: 1 người cầm máy tính đang nói chuyện -- vài bong bóng chat có dấu "?"]
+4. KẾT QUẢ: Biết thêm là ngoài đời dữ liệu bẩn hơn dữ liệu giả rất nhiều
+   (máy đo khác nhau, cách nhuộm khác nhau). Họ quan tâm nhất là có báo
+   nhầm hay không, và bác sĩ có hiểu được vì sao máy báo như vậy không.
+5. RÚT KINH NGHIỆM: Tự đọc tài liệu chỉ biết được một phần -- nói chuyện
+   với người làm thật mới thấy chỗ mình còn thiếu. Nên hỏi sớm hơn, không
+   đợi làm xong mới hỏi.
+6. TIẾP THEO: Sửa báo cáo theo góp ý, ghi rõ hạn chế, tìm cách xin dữ liệu
+   thật để thử.
+
+Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________
+
+
+================================================================
+NGÀY: 15/09/2026                        TRANG: 15
+GIAI ĐOẠN: Xin dữ liệu bệnh nhân thật -- bị chặn vì y đức
+THỜI GIAN: 19 giờ - 20 giờ30
+
+1. MỤC TIÊU: Thử xin một bộ dữ liệu tế bào bệnh nhân thật (đã ẩn danh) để
+   kiểm chứng ngoài dữ liệu giả, như lời hẹn ở trang trước.
+2. DỤNG CỤ: Email, điện thoại, liên hệ vài bệnh viện/phòng xét nghiệm và
+   một công ty dữ liệu sinh học.
+3. TIẾN TRÌNH: Liên hệ hỏi xin dữ liệu ở nhiều nơi khác nhau. Mỗi nơi đều
+   từ chối hoặc không trả lời, lý do chung là y đức -- quy định bảo vệ
+   thông tin bệnh nhân -- dù đã nói rõ là chỉ xin dữ liệu ẩn danh, dùng
+   cho học tập.
+[Vẽ: một cánh cửa đóng, vài mũi tên đi tới từ nhiều hướng đều bị chặn lại]
+4. KẾT QUẢ: Chưa xin được dữ liệu bệnh nhân thật nào.
+5. RÚT KINH NGHIỆM: Lấy mẫu từ người thật gần như bất khả thi với một học
+   sinh -- không phải vì kỹ thuật, mà vì quy trình đạo đức nghiên cứu. Đây
+   là giới hạn thật của đề tài, phải ghi rõ trong báo cáo chứ không giấu.
+6. TIẾP THEO: Ghi rõ giới hạn này vào báo cáo. Hỏi thêm chuyên gia/công ty
+   xem có bộ dữ liệu công khai, đã ẩn danh nào dùng thay được không.
 
 Chữ ký của Học sinh: ___________        Chữ ký GVHD: ___________

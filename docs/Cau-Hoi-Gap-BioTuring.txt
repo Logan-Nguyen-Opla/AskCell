@@ -1,0 +1,31 @@
+Câu hỏi khi gặp BioTuring
+(Công ty truyền cảm hứng cho AskCell -- bioinformatics, phân tích dữ liệu
+tế bào đơn/không gian, có Talk2Data: AI agent trả lời câu hỏi trên hơn
+500 triệu tế bào bằng cách tự viết truy vấn, kết nối qua MCP.)
+
+1. Về tính thực tế
+Dữ liệu flow cytometry ngoài đời thực "bẩn" hơn dữ liệu em tự mô phỏng rất
+nhiều -- máy đo khác nhau, panel màu khác nhau, cách nhuộm khác nhau
+(batch effect). Khi BioTuring gộp dữ liệu từ nhiều nguồn/nhiều lab, anh/chị
+xử lý vấn đề này thế nào? Với một dự án học sinh như AskCell, em có nên lo
+về batch effect ngay bây giờ, hay đó là bài toán của giai đoạn mở rộng sau
+này?
+
+2. Về dữ liệu
+AskCell hiện chỉ test trên dữ liệu mô phỏng vì liên hệ xin mẫu bệnh nhân
+thật (dù đã ẩn danh) đều bị từ chối vì lý do y đức. Khi BioTuring làm việc
+với bệnh viện/phòng lab để lấy dữ liệu tế bào thật, quy trình xin phép đó
+thường mất bao lâu? Có bộ dữ liệu công khai, đã ẩn danh nào mà một học sinh
+có thể xin dùng để kiểm thử mô hình không?
+
+3. Câu hỏi khác
+Talk2Data để AI agent tự viết truy vấn phân tích dữ liệu. AskCell thì làm
+ngược lại -- chặn hẳn, không cho AI tự tính toán gì, chỉ cho nó đọc kết quả
+có sẵn qua tool call để tránh bịa số. Theo anh/chị, cách nào an toàn hơn
+khi đưa thật vào tay bác sĩ, và BioTuring có từng gặp trường hợp AI đưa ra
+kết luận nghe rất thuyết phục nhưng sai chưa?
+
+(Dự phòng, nếu còn thời gian)
+Em mới lớp 9, chưa có nền tảng sinh học, học mọi thứ qua AI. Nếu muốn tiếp
+tục làm ở giao điểm AI với y sinh như BioTuring, anh/chị nghĩ nên đầu tư
+học sâu vào sinh học, khoa học máy tính, hay cả hai?
