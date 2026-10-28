@@ -43,6 +43,19 @@ _SAMPLE_DIR = Path(__file__).resolve().parent.parent / "sample_data"
 _REFERENCE_CACHE = _SAMPLE_DIR / "reference.npz"
 _NORMAL_GLOB = "normal_bm_*.fcs"
 
+# Other fitted references for specimens acquired on a different antibody
+# panel than the bundled one (name -> cache file). Tried automatically, in
+# order, when a specimen's panel doesn't match the active reference -- see
+# FlowSession.load_sample_from_path. Each .npz is a small, already-fitted
+# statistical summary (z-scored reference cloud + threshold), not raw patient
+# data, so it is safe to bundle.
+_ALT_REFERENCES = {
+    # Good et al. 2018 Nat Med (DDPR) -- real pediatric B-ALL CyTOF, public
+    # and de-identified, used a 35-marker developmental/signaling panel that
+    # shares only 8 of the 13 markers in the bundled reference.
+    "ddpr": _SAMPLE_DIR / "ddpr_reference.npz",
+}
+
 
 def _autoload_reference() -> None:
     """Load or fit the bundled healthy reference so the app works on open."""
@@ -68,6 +81,20 @@ def _autoload_reference() -> None:
     print(f"[AskCell] Fitted reference from {len(paths)} healthy specimens.")
 
 
+def _autoload_alt_references() -> None:
+    """Load any bundled alternate-panel references, if present on disk."""
+    from .flow import NormalReference
+
+    for name, cache_path in _ALT_REFERENCES.items():
+        if not cache_path.exists():
+            continue
+        try:
+            flow_session.add_alt_reference(name, NormalReference.load(str(cache_path)))
+            print(f"[AskCell] Loaded alt reference '{name}': {cache_path.name}")
+        except Exception as exc:  # a bad alt reference must not stop the server
+            print(f"[AskCell] Could not load alt reference '{name}': {exc}")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """On startup, auto-load the bundled healthy reference."""
@@ -75,6 +102,7 @@ async def lifespan(app: FastAPI):
         _autoload_reference()
     except Exception as exc:  # a bad reference must not stop the server
         print(f"[AskCell] Could not load the healthy reference: {exc}")
+    _autoload_alt_references()
 
     yield
 

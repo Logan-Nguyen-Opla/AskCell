@@ -80,6 +80,13 @@ export default function FlowReport({
         <p className="mt-2 text-xs leading-relaxed text-slate-300">
           {report.summary}
         </p>
+
+        {report.reference_profile && report.reference_profile !== "default" && (
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-cyan-400">
+            compared against the "{report.reference_profile}" reference —
+            this specimen's panel didn't match the default one
+          </p>
+        )}
       </div>
 
       {/* ---------- two-stage breakdown ---------- */}

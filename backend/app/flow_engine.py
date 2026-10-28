@@ -37,6 +37,7 @@ from .flow import (
     marker_matrix,
     read_fcs,
 )
+from .flow.panel import canonical_marker
 
 # Points streamed to the browser. The reference is only a visual backdrop so it
 # is thinned harder than the specimen, whose individual cells are the subject.
@@ -44,11 +45,112 @@ _REF_DISPLAY_CAP = 20_000
 _SAMPLE_DISPLAY_CAP = 120_000
 
 
+def choose_reference(
+    markers: list[str],
+    canonical_markers: set[str],
+    primary: NormalReference,
+    primary_name: str,
+    alt_references: dict[str, NormalReference],
+) -> tuple[str, NormalReference, list[str]]:
+    """Pick the first reference a specimen's markers actually satisfy.
+
+    Tries ``primary`` first by its own (raw-label) marker names, so the common
+    case never touches the alternates or canonicalization. Each alternate is
+    matched by canonical token instead, on *both* sides -- the alt's own
+    marker list is canonicalized here too, rather than assumed to already be
+    canonical, since nothing about registering an alt reference guarantees
+    that. (A reference's marker list is whatever label its own healthy
+    specimens happened to use at fit time; the real DDPR reference bundled
+    with this app happens to have been fitted on canonical tokens, but that's
+    an implementation detail of how it was built, not a contract this
+    function should assume every alt reference follows.) Matching real data
+    needs this: the same antigen is spelled differently from acquisition to
+    acquisition (``HLA-DR`` vs ``HLADR``, ``tIkaros`` vs ``tIKAROS``).
+
+    Returns ``(name, reference, [])`` on a match, or ``(primary_name, primary,
+    missing)`` when nothing matches -- ``missing`` is reported against
+    ``primary`` since that is the one the caller was actually trying to use.
+    """
+    missing = [m for m in primary.markers if m not in markers]
+    if not missing:
+        return primary_name, primary, []
+    for name, alt in alt_references.items():
+        alt_canon = {canonical_marker(m) for m in alt.markers}
+        if alt_canon <= canonical_markers:
+            return name, alt, []
+    return primary_name, primary, missing
+
+
+def _canonicalize_for_reference(gated: ad.AnnData, reference: NormalReference) -> ad.AnnData:
+    """Rename a gated specimen's marker channels to match an alt reference's
+    own marker spelling, by canonical token.
+
+    ``marker_matrix``/``reference.standardize`` both match by exact, literal
+    name. A specimen's channel is "HLA-DR", the reference's own marker list
+    might say "HLADR" (or some other spelling its fitting files happened to
+    use) -- renaming each of the specimen's channels to *the reference's own
+    string* for the same canonical antigen is what makes that literal lookup
+    succeed, regardless of which spelling either side happened to use.
+    """
+    ref_by_canon = {canonical_marker(m): m for m in reference.markers}
+    var = gated.var
+    keep_idx: list[int] = []
+    keep_names: list[str] = []
+    seen: set[str] = set()
+    for i, raw_name in enumerate(gated.var_names):
+        if var["channel_type"].iat[i] != "marker":
+            continue
+        canon = (
+            var["canonical"].iat[i]
+            if "canonical" in var.columns
+            else canonical_marker(str(raw_name))
+        )
+        target = ref_by_canon.get(canon)
+        if target is not None and target not in seen:
+            keep_idx.append(i)
+            keep_names.append(target)
+            seen.add(target)
+    sub = gated[:, keep_idx].copy()
+    sub.var_names = keep_names
+    sub.var["channel_type"] = "marker"
+    return sub
+
+
+def _canonical_marker_names(gated: ad.AnnData) -> set[str]:
+    """Canonical tokens for every "marker"-type channel in a gated specimen."""
+    var = gated.var
+    out: set[str] = set()
+    for i, raw_name in enumerate(gated.var_names):
+        if var["channel_type"].iat[i] != "marker":
+            continue
+        canon = (
+            var["canonical"].iat[i]
+            if "canonical" in var.columns
+            else canonical_marker(str(raw_name))
+        )
+        if canon:
+            out.add(canon)
+    return out
+
+
 class FlowSession:
     """Holds a fitted reference plus the specimen currently being examined."""
 
     def __init__(self) -> None:
         self.reference: NormalReference | None = None
+        self.reference_profile: str = "default"
+        # The reference explicitly chosen by set_reference()/
+        # load_reference_from_paths() (startup, or a user building their own).
+        # Kept separate from `reference`, which load_sample_from_path() may
+        # swap to an alt reference for one upload's embedding/display --
+        # without this, that swap would permanently lose the ability to
+        # analyse a *default*-panel specimen again in the same session.
+        self.default_reference: NormalReference | None = None
+        # Other fitted references, keyed by name, tried in load_sample_from_path
+        # when a specimen's panel doesn't match the default one. A specimen
+        # acquired on a different antibody panel isn't unusable -- it just
+        # needs a reference that was built on *its* panel instead.
+        self.alt_references: dict[str, NormalReference] = {}
         self.sample: ad.AnnData | None = None      # post-QC
         self.sample_name: str | None = None
         self.qc: dict | None = None
@@ -72,16 +174,40 @@ class FlowSession:
             )
         samples = [read_fcs(p, filename=os.path.basename(p)) for p in paths]
         self.reference = fit_reference(samples)
+        self.default_reference = self.reference
+        self.reference_profile = "default"
         self._fit_basis()
         # A new reference invalidates any result computed against the old one.
         self._clear_sample()
         return self.reference.summary()
 
-    def set_reference(self, reference: NormalReference) -> dict:
+    def set_reference(
+        self, reference: NormalReference, *, profile: str = "default", as_default: bool = True
+    ) -> dict:
+        """Make ``reference`` the active one.
+
+        ``as_default`` (the normal case: startup, or a user explicitly
+        building/uploading a reference) also makes it the fallback candidate
+        for future specimens whose panel doesn't match whatever is active at
+        the time. Internal auto-fallback switches (see
+        load_sample_from_path) pass ``as_default=False`` so they don't
+        overwrite that fallback with a reference matched to just one upload.
+        """
         self.reference = reference
+        self.reference_profile = profile
+        if as_default:
+            self.default_reference = reference
         self._fit_basis()
         self._clear_sample()
         return reference.summary()
+
+    def add_alt_reference(self, name: str, reference: NormalReference) -> None:
+        """Register a reference for a different panel, tried as a fallback.
+
+        Does not change the active reference -- it only becomes active if a
+        future specimen's panel matches it instead of the current one.
+        """
+        self.alt_references[name] = reference
 
     def _fit_basis(self) -> None:
         """Learn 2 principal axes from the reference cell cloud."""
@@ -120,10 +246,21 @@ class FlowSession:
 
         raw = read_fcs(path, filename=filename)
         gated, qc = gate(raw)
-
         X, markers = marker_matrix(gated)
-        panel = compare_panels(markers, self.reference.markers)
-        missing = [m for m in self.reference.markers if m not in markers]
+
+        # Matched against the stable default reference plus the alt pool --
+        # not against `self.reference`, which a *previous* upload may have
+        # left pointed at an alt. Otherwise, analysing one DDPR file would
+        # permanently strand the session: the next default-panel upload would
+        # find no default reference to fall back to, since it was never
+        # trying anything but whatever happened to still be active.
+        name, chosen, missing = choose_reference(
+            markers,
+            _canonical_marker_names(gated),
+            self.default_reference,
+            "default",
+            self.alt_references,
+        )
         if missing:
             # Refused rather than guessed: a comparison missing one of the
             # reference's markers is not the comparison that was calibrated.
@@ -133,12 +270,18 @@ class FlowSession:
                 "Marker intensities are not comparable across panels, so no "
                 "meaningful comparison is possible."
             )
+        if chosen is not self.reference:
+            self.set_reference(chosen, profile=name, as_default=False)
+            gated = _canonicalize_for_reference(gated, chosen)
+            X, markers = marker_matrix(gated)
 
+        panel = compare_panels(markers, self.reference.markers)
         report = detect(gated, self.reference, already_gated=True)
         # detect() gates nothing when already_gated, so it has no QC report to
         # return -- attach the one produced by the gate() call above.
         report["qc"] = qc
         report["panel"] = panel
+        report["reference_profile"] = self.reference_profile
 
         self.sample = gated
         self.sample_name = filename
@@ -158,6 +301,8 @@ class FlowSession:
 
     def reset(self) -> None:
         self.reference = None
+        self.reference_profile = "default"
+        self.default_reference = None
         self._basis = None
         self._basis_mean = None
         self._ref_xy = None
@@ -179,6 +324,7 @@ class FlowSession:
         }
         if self.reference is not None:
             out["reference"] = self.reference.summary()
+            out["reference_profile"] = self.reference_profile
         if self.report is not None:
             out["sample"] = {
                 "filename": self.sample_name,
