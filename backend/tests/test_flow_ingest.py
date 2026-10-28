@@ -21,6 +21,7 @@ from app.flow import (
     COFACTOR_FLUOR,
     canonical_marker,
     compare_panels,
+    is_viability_channel,
     panel_fingerprint,
     read_fcs,
 )
@@ -65,6 +66,20 @@ def test_canonical_marker(raw, expected):
 def test_canonical_marker_keeps_metal_only_channel():
     """A CyTOF channel named only for its isotope must not collapse to empty."""
     assert canonical_marker("Nd142Di") == "ND142DI"
+
+
+def test_bare_pi_is_viability_but_phospho_markers_are_not():
+    """Regression: the bare "pi" alias for propidium iodide was unanchored,
+    so it also matched any marker merely starting with "pi" -- on real CyTOF
+    data, the phospho-IKAROS channel "pIkaros" was misclassified as the
+    viability gate, silently replacing the real dead-cell exclusion with a
+    signaling readout.
+    """
+    assert is_viability_channel("PI")
+    assert is_viability_channel("pi")
+    assert not is_viability_channel("pIkaros")
+    assert not is_viability_channel("pIKAROS")
+    assert not is_viability_channel("pS6")
 
 
 @pytest.mark.parametrize("raw", ["CD 3", "CD-3", "CD 45", "CD 8a", "cd 19"])

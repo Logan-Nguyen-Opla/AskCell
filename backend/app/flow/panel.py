@@ -65,9 +65,16 @@ _SCATTER_PATTERNS = (
 
 # Viability / live-dead stains: real channels, but exclusionary gates rather
 # than phenotypic markers. Flagged so downstream stats can skip them.
+#
+# "pi" (bare, for propidium iodide) must be matched as a whole token, not a
+# prefix: unanchored, it also matches any marker that merely *starts* with
+# "pi" -- caught on real CyTOF data, where the phospho-IKAROS channel
+# "pIkaros" was silently misclassified as the viability gate instead of the
+# actual Cisplatin/viability stain, so dead cells were never excluded.
 _VIABILITY_PATTERNS = (
     re.compile(r"live[_\s/-]*dead", re.I),
-    re.compile(r"^(dapi|7aad|propidium|pi|zombie|viability|viakrome)", re.I),
+    re.compile(r"^(dapi|7aad|propidium|zombie|viability|viakrome)", re.I),
+    re.compile(r"^pi$", re.I),
 )
 
 _NON_ALNUM = re.compile(r"[^a-z0-9]+")
