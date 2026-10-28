@@ -171,7 +171,13 @@ def read_fcs(
 
     # subsample=1 stops FlowKit building its own 10k-event subsample on load. We
     # always read the full event array and subsample later, for display only.
-    sample = flowkit.Sample(path, subsample=1)
+    #
+    # ignore_offset_error=True: many real-world instruments write a HEADER
+    # stop-byte that is exclusive of the data section instead of inclusive,
+    # off by exactly one byte. FlowIO already special-cases this one-byte
+    # discrepancy and corrects for it -- the flag only opts into that known-
+    # benign fix; any other offset mismatch still raises normally.
+    sample = flowkit.Sample(path, subsample=1, ignore_offset_error=True)
     metadata = dict(sample.metadata)
 
     pnn_labels = [str(s) for s in sample.pnn_labels]

@@ -174,6 +174,29 @@ def test_filename_recorded_separately_from_path():
     assert adata.uns["askcell"]["filename"] == "uploaded_by_user.fcs"
 
 
+def test_read_fcs_opts_into_offset_tolerance(monkeypatch):
+    """Regression: real instrument FCS files commonly report a HEADER
+    stop-byte that is exclusive of the data section instead of inclusive --
+    off by exactly one byte. FlowIO already corrects for that one specific,
+    benign case, but only when asked via ``ignore_offset_error``; without it,
+    ingest fails on real patient files with "reports a data offset that is
+    off by 1" even though our own synthetic fixtures never trip it.
+    """
+    import flowkit
+
+    captured = {}
+    real_sample = flowkit.Sample
+
+    class RecordingSample(real_sample):
+        def __init__(self, path, **kwargs):
+            captured.update(kwargs)
+            super().__init__(path, **kwargs)
+
+    monkeypatch.setattr(flowkit, "Sample", RecordingSample)
+    read_fcs(NORMAL)
+    assert captured.get("ignore_offset_error") is True
+
+
 # --------------------------------------------------------------------------- #
 # Panel matching -- the precondition for any reference comparison
 # --------------------------------------------------------------------------- #
