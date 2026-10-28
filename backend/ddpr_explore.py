@@ -168,12 +168,13 @@ def print_reference(ref: NormalReference) -> None:
           f"({s['threshold_percentile']}th percentile of healthy cells)")
 
 
-def run_one(path: str, ref: NormalReference) -> dict:
+def run_one(path: str, ref: NormalReference, radius_fraction: float | None = None) -> dict:
     name = os.path.basename(path)
     t0 = time.time()
     adata = restrict_to_phenotype(read_fcs(path, filename=name))
     gated, qc = gate(adata)
-    report = detect(gated, ref, already_gated=True)
+    kwargs = {} if radius_fraction is None else {"radius_fraction": radius_fraction}
+    report = detect(gated, ref, already_gated=True, **kwargs)
     elapsed = time.time() - t0
 
     print(f"\n{BOLD}{name}{OFF}  {DIM}({elapsed:.1f}s){OFF}")
@@ -216,6 +217,12 @@ def main() -> None:
     ap.add_argument("--data-dir", required=True, help="path to extracted ddpr_data/")
     ap.add_argument("--cache", default=None, help="where to cache the fitted reference")
     ap.add_argument("--refit", action="store_true")
+    ap.add_argument(
+        "--radius-fraction", type=float, default=None,
+        help="override the clustering linking-radius multiplier (default: "
+             "detect.py's DEFAULT_RADIUS_FRACTION=2.0, measured on synthetic "
+             "data only -- see ddpr_remeasure_radius.py for the real-data gap)",
+    )
     ap.add_argument("patients", nargs="*", help="patient FCS files to run (default: a sample)")
     args = ap.parse_args()
 
@@ -230,7 +237,7 @@ def main() -> None:
     if not patients:
         raise SystemExit("no patient files matched")
 
-    results = [run_one(p, ref) for p in patients]
+    results = [run_one(p, ref, args.radius_fraction) for p in patients]
 
     print(f"\n{BOLD}{'=' * 68}{OFF}\n{BOLD}SUMMARY{OFF}")
     for r in results:
